@@ -1,4 +1,4 @@
-[iamchemix.com](iamchemix.com)
+[i am chemiX.com](http://iamchemix.com)
 =================
 
 This is repository for my blog
