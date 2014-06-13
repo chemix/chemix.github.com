@@ -10,6 +10,17 @@ title: Načítání Facebook postů v Nette Framework
 
 ``` DRAFT ```
 
+Na jednom projektu jsem narazil na potřebu zobrazovat posty z Facebooku na klientově stránce. Inu začal jsem psát prototyp jak bych danou věc řešil. Prototyp jsem "spíchnul" za hodinku, ale bylo to uděláno tak trošku na hulváta. Tak jsem si řekl že to postupně přepíšu tak jak by to třeba napsal nějaký zkušený programátor s Nette frameworkem. Na http://srazy.info/nettefwpivo jsem danou věc přednesl a Nette guruové mi přislíbili odbornější konzultace, tak doufám že se nám podaří vytvořit návod jak by se takové věci nad Nette měli psát.
+
+celý projekt je pak k naleznutí na Githubu https://github.com/chemix/Nette-Facebook-Reader
+
+Pokud máte nápad jak danou ukázku vylepšit nebo článek upravit, pošlete pull request, nebo mi napište email.
+
+
+
+321... START
+=============
+
 Začneme čistým projektem vycházející z Nette/Sandbox
 
 `composer create-project nette/sandbox Nette-Facebook-Reader`
@@ -45,8 +56,11 @@ class ImportPresenter extends BasePresenter
 	}
 
 }
-```
 
+Přidáme trošku Facebooku
+========================
+
+```
 Přidáme si do composer.json závislost na Facebook SDK
 
 ```
@@ -124,6 +138,9 @@ Malinko si zjednodušíme ošetření chyb jen na ukončení aplikace.
 }
 ```
 
+
+Cache, ať při vývoji nečekáme
+=============================
 
 Přidáme si možnost cache pro požadavek. (Hlavně si tím urychlíme další rozšiřování, přeci jen čekat 10 sec na každý refresh mě nebaví).
 
@@ -206,6 +223,9 @@ public function renderDefault()
 Nyní by nám druhý request měl trvat výrazně kratší dobu.
 
 ![with cache](/image/nette-facebook-reader/with-cache.png)
+
+Ukládáme posty do databáze
+==========================
 
 Dalším krokem je uložit si získána data do databáze. Pro práci s databází použijeme třídu Nette\Database. Vytvoříme si databázi a uživatele (díky klonování Nette Sandbox máme výborný nástroj Adminer přímo u projektu /adminer/).
 
@@ -319,4 +339,12 @@ if (is_array($data) && !empty($data)) {
 
 můžeme se přesvědčit, že se nám vše uložilo
 
-![save posts to database](image/nette-facebook-reader/save-to-database.png)
+![save posts to database](/image/nette-facebook-reader/save-to-database.png)
+
+
+NEXT STEPS
+----------
+* vypisovani postu v prezenteru
+* prepsat a pouzit neco jako model a pouzivat nette services
+* pouzit Kdyby/Facebook
+* prihlasovani admina a schvalovani zobrazeni na strance
