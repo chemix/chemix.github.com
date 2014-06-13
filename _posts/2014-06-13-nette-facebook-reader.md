@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Načítání Facebook postů v Nette Framework
+published: true
 ---
 
 {{ page.title }}
@@ -9,6 +10,7 @@ title: Načítání Facebook postů v Nette Framework
 <p class="meta">12 Jun 2014 - Prague (Bohemia / Czech Republic)</p>
 
 ``` DRAFT ```
+
 
 Na jednom projektu jsem narazil na potřebu zobrazovat posty z Facebooku na klientově stránce. Inu začal jsem psát prototyp jak bych danou věc řešil. Prototyp jsem "spíchnul" za hodinku, ale bylo to uděláno tak trošku na hulváta. Tak jsem si řekl že to postupně přepíšu tak jak by to třeba napsal nějaký zkušený programátor s Nette frameworkem. Na http://srazy.info/nettefwpivo jsem danou věc přednesl a Nette guruové mi přislíbili odbornější konzultace, tak doufám že se nám podaří vytvořit návod jak by se takové věci nad Nette měli psát.
 
@@ -34,14 +36,13 @@ zápis do "log" a "temp" folderu
 vyčistíme homepage šablonu a připravíme si nový Import Presenter se šablonou.
 
 /app/templates/Import/default.latte
-```
+```html
 {block #content}
 	<h1>Import</h1>
 ```
+a /app/presenters/ImportPresenter.php
 
-
-/app/presenters/ImportPresenter.php
-```
+```php
 namespace App\Presenters;
 
 use Nette,
@@ -56,14 +57,14 @@ class ImportPresenter extends BasePresenter
 	}
 
 }
+```
 
 Přidáme trošku Facebooku
 ========================
 
-```
 Přidáme si do composer.json závislost na Facebook SDK
 
-```
+```json
 	"require": {
 		"php": ">= 5.3.7",
 		"nette/nette": "~2.2.0",
@@ -88,7 +89,7 @@ a zjistíme si Facebook App ID a App Secret
 
 Na hulváta si zkusíme načíst data skrze Facebook Graph Api. V našem Import Presenteru přidáme do hlavičky
 
-```
+```php
 use Facebook\FacebookRequest;
 use Facebook\FacebookRequestException;
 use Facebook\FacebookSession;
@@ -97,7 +98,7 @@ use Tracy\Dumper;
 
 a metodu přepíšeme podle ukázky z dokumentace k PHP Facebook SDK
 
-```
+```php
 public function renderDefault()
 {
 	FacebookSession::setDefaultApplication('YOUR_APP_ID', 'YOUR_APP_SECRET');
@@ -286,7 +287,7 @@ Pozor na zápis, liší se od Dibi a občas mě to dokáže zabrzdit ;-)
 
 V presenteru si pak na hulváta doplníme ukládání jednotlivých řádku, připadne po opakovaném importu aktualizaci postit
 
-```
+```php
 // save data to database
 if (is_array($data) && !empty($data)) {
 	foreach ($data as $rowPost) {
