@@ -341,6 +341,51 @@ můžeme se přesvědčit, že se nám vše uložilo
 
 ![save posts to database](/image/nette-facebook-reader/save-to-database.png)
 
+Předáme si výpis práve přidaných postů do šablony a tam si je vypíšeme.
+
+```
+// send data to template
+$this->template->wallPosts = $data;
+```
+
+a
+```
+{foreach $wallPosts as $post}
+	type: <strong>{$post->type}</strong> <br>
+	<small>
+		id: {$post->id}<br>
+		created_time: {$post->created_time} <br>
+		updated_time: {$post->updated_time} <br>
+	</small>
+
+	{ifset $post->name}
+		name: <h1>{$post->name}</h1>
+	{/ifset}
+
+	{ifset $post->status_type}
+		status_type: {$post->status_type} <br>
+	{/ifset}
+
+	{ifset $post->message}
+		message: {$post->message} <br>
+	{/ifset}
+
+	{ifset $post->picture}
+		piscture: {$post->picture} <br>
+		<img src="{$post->picture}" />
+	{/ifset}
+
+	{ifset $post->link}
+		link: <a href="{$post->link}">{$post->link}</a> <br>
+	{/ifset}
+
+	{ifset $post->caption}
+		caption: {$post->caption} <br>
+	{/ifset}
+	<hr>
+{/foreach}
+```
+
 
 NEXT STEPS
 ----------
