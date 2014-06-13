@@ -386,10 +386,56 @@ a
 {/foreach}
 ```
 
+Zobrazení postů na homepage
+===========================
+
+V HomepagePresenteru si načteme posty co jsme načetly importem. Jelikož, ale nechcem zobrazovat všechny posty nastavíme si u některých v databázi status na 1 a budem zobrazovat pouze tyto.
+
+```
+public function renderDefault()
+{
+	$facebookWallPosts = $this->database->table('facebook_wallposts')->where('status','1')->limit(5)->fetchAll();
+	$this->template->wallPosts = $facebookWallPosts;
+}
+```
+
+a nesmíme zapomenout na přidání public property $database;
+
+```
+	/**
+	 * @var \Nette\Database\Context @inject
+	 */
+	public $database;
+```
+
+šablona pak může vypadat nějak takto:
+
+```
+<div n:if="$wallPosts" class="facebook-posts">
+	<div n:foreach="$wallPosts as $post" class="post {$post->type}">
+		<h3 n:if="$post->name">{$post->name}</h3>
+		<img n:if="$post->picture" src="{$post->picture}" />
+
+		{if $post->message}
+			<p>
+				{$post->message|truncate:250:'...'}
+				<a n:if="$post->link" href="{$post->link}">více</a>
+			</p>
+		{else}
+			{if $post->link}
+				<a href="{$post->link}">více</a>
+			{else}
+				<a href="http://www.facebook.com/nettefw">více</a>
+			{/if}
+		{/if}
+	</div>
+</div>
+```
+
+
 
 NEXT STEPS
 ----------
-* vypisovani postu v prezenteru
 * prepsat a pouzit neco jako model a pouzivat nette services
 * pouzit Kdyby/Facebook
 * prihlasovani admina a schvalovani zobrazeni na strance
