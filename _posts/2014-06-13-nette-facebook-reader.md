@@ -443,7 +443,7 @@ Pokud se nad úkolem zamyslíme tak je to taková věc co by se nám mohla hodit
 Všiměte si jak si v konstruktoru řekneme o Nette\Database\Context
 
 app/model/FacebookWallpost.php
-```php
+{% highlight php %}
 namespace App\Model;
 
 use Nette\Database\Context;
@@ -471,10 +471,11 @@ class FacebookWallposts extends Object
 			->fetchAll();
 	}
 }
-```
+{% endhighlight %}
+
 a v presenteru přepíšeme vypisování postů na
 
-```php
+{% highlight php %}
 /**
  * @var \App\Model\FacebookWallposts @inject
  */
@@ -484,17 +485,17 @@ public function renderDefault()
 {
 	$this->template->wallPosts = $this->wallposts->getLastPosts();
 }
-```
+{% endhighlight %}
 
 Property $database jsme nahradili za $wallpost a změnili typ třídy co chceme po frameworku aby nám předal. Aby to celé fungovalo musíme ješte danou servisu zaregitrovat v config.neon
 
-```json
+{% highlight json %}
 services:
 	- App\Model\UserManager
 	- App\RouterFactory
 	router: @App\RouterFactory::createRouter
 	- App\Model\FacebookWallposts
-```
+{% endhighlight %}
 
 To samé uděláme i s částí pro načítání dat z Facebooku. 
 
