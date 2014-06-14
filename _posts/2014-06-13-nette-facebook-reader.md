@@ -433,7 +433,7 @@ a nesmíme zapomenout na přidání public property $database;
 </div>
 {% endhighlight %}
 
-tuto verzi najdete pod tagem [:prototype](https://github.com/chemix/Nette-Facebook-Reader/tree/prototype)	
+tuto verzi najdete pod tagem [:prototype](https://github.com/chemix/Nette-Facebook-Reader/tree/prototype)
 
 Zapouzdření do modelu
 ======================
@@ -443,6 +443,7 @@ Pokud se nad úkolem zamyslíme tak je to taková věc co by se nám mohla hodit
 Všiměte si jak si v konstruktoru řekneme o Nette\Database\Context
 
 app/model/FacebookWallpost.php
+
 {% highlight php %}
 namespace App\Model;
 
@@ -451,7 +452,6 @@ use Nette\Object;
 
 class FacebookWallposts extends Object
 {
-
 	/**
 	 * @var \Nette\Database\Context
 	 */
@@ -497,7 +497,7 @@ services:
 	- App\Model\FacebookWallposts
 {% endhighlight %}
 
-To samé uděláme i s částí pro načítání dat z Facebooku. Při přesunu odstraním používání cache, jelikož už jí při vývoji nepotřebuji ba naopak pokud chci zadat import tak chci aby se provedl vždy. 
+To samé uděláme i s částí pro načítání dat z Facebooku. Při přesunu odstraním používání cache, jelikož už jí při vývoji nepotřebuji ba naopak pokud chci zadat import tak chci aby se provedl vždy.
 
 {% highlight php %}
 public function importPostFromFacebook()
@@ -517,10 +517,10 @@ public function importPostFromFacebook()
 	}
 
 	// save data to database
-    ...
+	...
 {% endhighlight %}
 
-z Import presenteru přemístíme use sekci do modelu a presenter se nám rázem zjednodušil na 
+z Import presenteru přemístíme use sekci do modelu a presenter se nám rázem zjednodušil na
 
 {% highlight php %}
 class ImportPresenter extends BasePresenter
@@ -538,22 +538,22 @@ class ImportPresenter extends BasePresenter
 }
 {% endhighlight %}
 
-Jako pěkný, ale. Ale nám se ještě nelíbí  
+Jako pěkný, ale. Ale nám se ještě nelíbí
 
 {% highlight %}
 FacebookSession::setDefaultApplication('YOUR_APP_ID', 'YOUR_APP_SECRET');
 $session = FacebookSession::newAppSession();
 {% endhighlight %}
 
-hesla chceme v konfiguraci a zde si jen řekneme o funkční session. Nahradíme tedy za 
+hesla chceme v konfiguraci a zde si jen řekneme o funkční session. Nahradíme tedy za
 
-{% highlight  php%}
+{% highlight php %}
 $session = $this->facebookSessionManager->getAppSession();
 {% endhighlight %}
 
 a do konstruktoru přidáme předání závislosti. plus nezapomene na deklarovaní property.
 
-{% highlight  php%}
+{% highlight php %}
 /**
  * @var \App\Model\FacebookSessionManager
  */
