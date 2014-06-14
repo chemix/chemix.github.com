@@ -497,13 +497,131 @@ services:
 	- App\Model\FacebookWallposts
 {% endhighlight %}
 
-To samé uděláme i s částí pro načítání dat z Facebooku. 
+To samé uděláme i s částí pro načítání dat z Facebooku. Při přesunu odstraním používání cache, jelikož už jí při vývoji nepotřebuji ba naopak pokud chci zadat import tak chci aby se provedl vždy. 
 
+{% highlight php %}
+public function importPostFromFacebook()
+{
+	FacebookSession::setDefaultApplication('YOUR_APP_ID', 'YOUR_APP_SECRET');
+	$session = FacebookSession::newAppSession();
 
+	try {
+		$request = new FacebookRequest($session, 'GET', '/nettefw/feed');
+		$response = $request->execute();
+		$posts = $response->getGraphObject()->asArray();
+		$data = $posts['data'];
+
+	} catch (\Exception $ex) {
+		throw $ex;
+		$this->terminate();
+	}
+
+	// save data to database
+    ...
+{% endhighlight %}
+
+z Import presenteru přemístíme use sekci do modelu a presenter se nám rázem zjednodušil na 
+
+{% highlight php %}
+class ImportPresenter extends BasePresenter
+{
+	/**
+	 * @var \App\Model\FacebookWallposts @inject
+	 */
+	public $wallposts;
+
+	public function renderDefault()
+	{
+		$this->template->wallPosts = $this->wallposts->importPostFromFacebook();
+	}
+
+}
+{% endhighlight %}
+
+Jako pěkný, ale. Ale nám se ještě nelíbí  
+
+{% highlight %}
+FacebookSession::setDefaultApplication('YOUR_APP_ID', 'YOUR_APP_SECRET');
+$session = FacebookSession::newAppSession();
+{% endhighlight %}
+
+hesla chceme v konfiguraci a zde si jen řekneme o funkční session. Nahradíme tedy za 
+
+{% highlight  php%}
+$session = $this->facebookSessionManager->getAppSession();
+{% endhighlight %}
+
+a do konstruktoru přidáme předání závislosti. plus nezapomene na deklarovaní property.
+
+{% highlight  php%}
+/**
+ * @var \App\Model\FacebookSessionManager
+ */
+protected $facebookSessionManager;
+
+/**
+ * @param Context $database
+ * @param FacebookSessionManager $facebook
+ */
+function __construct(Context $database, FacebookSessionManager $facebook)
+{
+	$this->database = $database;
+	$this->facebookSessionManager = $facebook;
+}
+
+{% endhighlight %}
+
+a našeho "hloupoučkého"managera definujeme v /app/model/FacebookSessionManager.php
+
+{% highlight php %}
+namespace App\Model;
+
+use Facebook\FacebookSession;
+
+class FacebookSessionManager {
+
+	protected $appId;
+
+	protected $appSecret;
+
+	function __construct($appId, $appSecret)
+	{
+		$this->appId = $appId;
+		$this->appSecret = $appSecret;
+
+		FacebookSession::setDefaultApplication($this->appId, $this->appSecret);
+	}
+
+	public function getAppSession()
+	{
+		return FacebookSession::newAppSession();
+	}
+}
+
+{% endhighlight %}
+
+registrujeme ho v config.neon
+
+{% highlight %}
+services:
+	- App\Model\UserManager
+	- App\RouterFactory
+	router: @App\RouterFactory::createRouter
+	- App\Model\FacebookWallposts
+	- App\Model\FacebookSessionManager(%facebook.appId%, %facebook.appSecret%)
+{% endhighlight %}
+
+a v config.local.neon přidáme sekci s kódem a heslem k aplikaci
+
+{% highlight %}
+parameters:
+	facebook:
+		appId: APP_ID
+		appSecret: APP_SECRET
+{% endhighlight %}
 
 
 NEXT STEPS
 ----------
-* prepsat a pouzit neco jako model a pouzivat nette services
 * pouzit Kdyby/Facebook
 * prihlasovani admina a schvalovani zobrazeni na strance
