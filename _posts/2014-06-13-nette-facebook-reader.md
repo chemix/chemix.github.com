@@ -433,6 +433,72 @@ a nesmíme zapomenout na přidání public property $database;
 </div>
 {% endhighlight %}
 
+tuto verzi najdete pod tagem [:prototype](https://github.com/chemix/Nette-Facebook-Reader/tree/prototype)	
+
+Zapouzdření do modelu
+======================
+
+Pokud se nad úkolem zamyslíme tak je to taková věc co by se nám mohla hodit i na jiném projektu. Připravíme si tedy modelovou vrstvu. Do ktere přepíšeme náš prototyp.
+
+Všiměte si jak si v konstruktoru řekneme o Nette\Database\Context
+
+app/model/FacebookWallpost.php
+```php
+namespace App\Model;
+
+use Nette\Database\Context;
+use Nette\Object;
+
+class FacebookWallposts extends Object
+{
+
+	/**
+	 * @var \Nette\Database\Context
+	 */
+	protected $database;
+
+	function __construct(Context $database)
+	{
+		$this->database = $database;
+	}
+
+	public function getLastPosts($count = 5)
+	{
+		return $this->database->table('facebook_wallposts')
+			->where('status', '1')
+			->order('created_time DESC')
+			->limit($count)
+			->fetchAll();
+	}
+}
+```
+a v presenteru přepíšeme vypisování postů na
+
+```php
+/**
+ * @var \App\Model\FacebookWallposts @inject
+ */
+public $wallposts;
+
+public function renderDefault()
+{
+	$this->template->wallPosts = $this->wallposts->getLastPosts();
+}
+```
+
+Property $database jsme nahradili za $wallpost a změnili typ třídy co chceme po frameworku aby nám předal. Aby to celé fungovalo musíme ješte danou servisu zaregitrovat v config.neon
+
+```json
+services:
+	- App\Model\UserManager
+	- App\RouterFactory
+	router: @App\RouterFactory::createRouter
+	- App\Model\FacebookWallposts
+```
+
+To samé uděláme i s částí pro načítání dat z Facebooku. 
+
+
 
 
 NEXT STEPS
