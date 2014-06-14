@@ -489,7 +489,7 @@ public function renderDefault()
 
 Property $database jsme nahradili za $wallpost a změnili typ třídy co chceme po frameworku aby nám předal. Aby to celé fungovalo musíme ješte danou servisu zaregitrovat v config.neon
 
-{% highlight json %}
+{% highlight yaml %}
 services:
 	- App\Model\UserManager
 	- App\RouterFactory
