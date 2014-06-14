@@ -411,7 +411,7 @@ a nesmíme zapomenout na přidání public property $database;
 
 šablona pak může vypadat nějak takto:
 
-```html
+{% highlight html %}
 <div n:if="$wallPosts" class="facebook-posts">
 	<div n:foreach="$wallPosts as $post" class="post {$post->type}">
 		<h3 n:if="$post->name">{$post->name}</h3>
@@ -431,7 +431,7 @@ a nesmíme zapomenout na přidání public property $database;
 		{/if}
 	</div>
 </div>
-```
+{% endhighlight %}
 
 
 
