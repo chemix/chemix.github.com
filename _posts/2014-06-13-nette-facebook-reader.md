@@ -350,6 +350,7 @@ $this->template->wallPosts = $data;
 ```
 
 a
+
 ```
 {foreach $wallPosts as $post}
 	type: <strong>{$post->type}</strong> <br>
