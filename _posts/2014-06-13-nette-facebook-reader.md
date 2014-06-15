@@ -579,7 +579,7 @@ function __construct(Context $database, FacebookSessionManager $facebook)
 }
 ```
 
-a našeho "hloupoučkého"managera definujeme v /app/model/FacebookSessionManager.php
+a našeho "hloupoučkého" managera definujeme v /app/model/FacebookSessionManager.php
 
 ``` php
 namespace App\Model;
