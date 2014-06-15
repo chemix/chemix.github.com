@@ -524,3 +524,39 @@ public function importPostFromFacebook()
 	// save data to database
 	...
 ```
+
+
+
+
+z Import presenteru přemístíme use sekci do modelu a presenter se nám rázem zjednodušil na
+
+``` php
+class ImportPresenter extends BasePresenter
+{
+	/**
+	 * @var \App\Model\FacebookWallposts @inject
+	 */
+	public $wallposts;
+
+	public function renderDefault()
+	{
+		$this->template->wallPosts = $this->wallposts->importPostFromFacebook();
+	}
+
+}
+```
+
+Jako pěkný, ale. Ale nám se ještě nelíbí
+
+``` php
+FacebookSession::setDefaultApplication('YOUR_APP_ID', 'YOUR_APP_SECRET');
+$session = FacebookSession::newAppSession();
+```
+
+hesla chceme v konfiguraci a zde si jen řekneme o funkční session. Nahradíme tedy za
+
+```
+$session = $this->facebookSessionManager->getAppSession();
+```
+
+a do konstruktoru přidáme předání závislosti. plus nezapomene na deklarovaní property.
