@@ -435,3 +435,43 @@ a nesmíme zapomenout na přidání public property $database;
 
 tuto verzi najdete pod tagem [:prototype](https://github.com/chemix/Nette-Facebook-Reader/tree/prototype)
 
+Zapouzdření do modelu
+======================
+
+Pokud se nad úkolem zamyslíme tak je to taková věc co by se nám mohla hodit i na jiném projektu. Připravíme si tedy modelovou vrstvu. Do ktere přepíšeme náš prototyp.
+
+Všiměte si jak si v konstruktoru řekneme o Nette\Database\Context
+
+app/model/FacebookWallpost.php
+
+``` php
+namespace App\Model;
+
+use Nette\Database\Context;
+use Nette\Object;
+
+class FacebookWallposts extends Object
+{
+	/**
+	 * @var \Nette\Database\Context
+	 */
+	protected $database;
+
+	function __construct(Context $database)
+	{
+		$this->database = $database;
+	}
+
+	public function getLastPosts($count = 5)
+	{
+		return $this->database->table('facebook_wallposts')
+			->where('status', '1')
+			->order('created_time DESC')
+			->limit($count)
+			->fetchAll();
+	}
+}
+```
+
+
+
