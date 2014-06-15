@@ -560,3 +560,75 @@ $session = $this->facebookSessionManager->getAppSession();
 ```
 
 a do konstruktoru přidáme předání závislosti. plus nezapomene na deklarovaní property.
+
+
+``` php
+/**
+ * @var \App\Model\FacebookSessionManager
+ */
+protected $facebookSessionManager;
+
+/**
+ * @param Context $database
+ * @param FacebookSessionManager $facebook
+ */
+function __construct(Context $database, FacebookSessionManager $facebook)
+{
+	$this->database = $database;
+	$this->facebookSessionManager = $facebook;
+}
+```
+
+a našeho "hloupoučkého"managera definujeme v /app/model/FacebookSessionManager.php
+
+``` php
+namespace App\Model;
+
+use Facebook\FacebookSession;
+
+class FacebookSessionManager {
+
+	protected $appId;
+
+	protected $appSecret;
+
+	function __construct($appId, $appSecret)
+	{
+		$this->appId = $appId;
+		$this->appSecret = $appSecret;
+
+		FacebookSession::setDefaultApplication($this->appId, $this->appSecret);
+	}
+
+	public function getAppSession()
+	{
+		return FacebookSession::newAppSession();
+	}
+}
+```
+
+registrujeme ho v config.neon
+
+```
+services:
+	- App\Model\UserManager
+	- App\RouterFactory
+	router: @App\RouterFactory::createRouter
+	- App\Model\FacebookWallposts
+	- App\Model\FacebookSessionManager(%facebook.appId%, %facebook.appSecret%)
+```
+
+a v config.local.neon přidáme sekci s kódem a heslem k aplikaci
+
+```
+parameters:
+	facebook:
+		appId: APP_ID
+		appSecret: APP_SECRET
+```
+
+
+NEXT STEPS
+----------
+* pouzit Kdyby/Facebook
+* prihlasovani admina a schvalovani zobrazeni na strance
