@@ -12,9 +12,9 @@ published: true
 ``` DRAFT ```
 
 
-Na jednom projektu jsem narazil na potřebu zobrazovat posty z Facebooku na klientově stránce. Inu začal jsem psát prototyp jak bych danou věc řešil. Prototyp jsem "spíchnul" za hodinku, ale bylo to uděláno tak trošku na hulváta. Tak jsem si řekl že to postupně přepíšu tak jak by to třeba napsal nějaký zkušený programátor s Nette frameworkem. Na http://srazy.info/nettefwpivo jsem danou věc přednesl a Nette guruové mi přislíbili odbornější konzultace, tak doufám že se nám podaří vytvořit návod jak by se takové věci nad Nette měli psát.
+Na jednom projektu jsem narazil na potřebu zobrazovat posty z Facebooku na klientově stránce. Inu začal jsem psát prototyp jak bych danou věc řešil. Prototyp jsem "spíchnul" za hodinku, ale bylo to uděláno tak trošku na hulváta. Tak jsem si řekl že to postupně přepíšu tak jak by to třeba napsal nějaký zkušený programátor s Nette frameworkem. Na [http://srazy.info/nettefwpivo](http://srazy.info/nettefwpivo) jsem danou věc přednesl a Nette guruové mi přislíbili odbornější konzultace, tak doufám že se nám podaří vytvořit návod jak by se takové věci nad Nette měli psát.
 
-celý projekt je pak k naleznutí na Githubu https://github.com/chemix/Nette-Facebook-Reader
+celý projekt je pak k naleznutí na Githubu [https://github.com/chemix/Nette-Facebook-Reader](https://github.com/chemix/Nette-Facebook-Reader)
 
 Pokud máte nápad jak danou ukázku vylepšit nebo článek upravit, pošlete pull request, nebo mi napište email.
 
