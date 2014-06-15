@@ -473,5 +473,30 @@ class FacebookWallposts extends Object
 }
 ```
 
+a v presenteru přepíšeme vypisování postů na
 
+``` php
+/**
+ * @var \App\Model\FacebookWallposts @inject
+ */
+public $wallposts;
 
+public function renderDefault()
+{
+	$this->template->wallPosts = $this->wallposts->getLastPosts();
+}
+```
+
+Property $database jsme nahradili za $wallpost a změnili typ třídy co chceme po frameworku aby nám předal. Aby to celé fungovalo musíme ješte danou servisu zaregitrovat v config.neon
+
+```
+services:
+	- App\Model\UserManager
+	- App\RouterFactory
+	router: @App\RouterFactory::createRouter
+	- App\Model\FacebookWallposts
+```
+
+To samé uděláme i s částí pro načítání dat z Facebooku.
+
+Při přesunu odstraním používání cache, jelikož už jí při vývoji nepotřebuji ba naopak pokud chci zadat import tak chci aby se provedl vždy.
