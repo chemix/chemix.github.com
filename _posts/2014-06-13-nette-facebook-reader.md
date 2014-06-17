@@ -12,16 +12,17 @@ published: true
 ``` DRAFT ```
 
 
-Na jednom projektu jsem narazil na potřebu zobrazovat posty z Facebooku na klientově stránce. Inu začal jsem psát prototyp jak bych danou věc řešil. Prototyp jsem "spíchnul" za hodinku, ale bylo to uděláno tak trošku na hulváta. Tak jsem si řekl že to postupně přepíšu tak jak by to třeba napsal nějaký zkušený programátor s Nette frameworkem. Na [http://srazy.info/nettefwpivo](http://srazy.info/nettefwpivo) jsem danou věc přednesl a Nette guruové mi přislíbili odbornější konzultace, tak doufám že se nám podaří vytvořit návod jak by se takové věci nad Nette měli psát.
+Na jednom projektu jsem narazil na potřebu zobrazovat posty z Facebooku na klientově stránce. Inu začal jsem psát prototyp jak bych danou věc řešil. Prototyp jsem "spíchnul" za hodinku, ale bylo to uděláno tak trošku na hulváta. Tak jsem si řekl že to postupně přepíšu tak jak by to třeba napsal nějaký zkušený programátor s Nette frameworkem. Na [http://srazy.info/nettefwpivo](http://srazy.info/nettefwpivo) jsem danou věc přednesl a Nette guruové mi přislíbili odbornější konzultace, tak doufám že se nám podaří vytvořit návod jak by se takové věci nad Nette mohli psát.
 
 celý projekt je pak k naleznutí na Githubu [https://github.com/chemix/Nette-Facebook-Reader](https://github.com/chemix/Nette-Facebook-Reader)
 
 Pokud máte nápad jak danou ukázku vylepšit nebo článek upravit, pošlete pull request, nebo mi napište email.
 
+Článek je psán stylem od nuly k prototypu a nasledné zlepšování. Ne všechen kód je zde uváděn, ale každý kus kódu je zakončen odkazem na daný commit na githubu. 
 
 
-321... START
-=============
+Vytvoření projektu z Nette/Sandbox
+==================================
 
 Začneme čistým projektem vycházející z Nette/Sandbox
 
@@ -32,6 +33,12 @@ Začneme čistým projektem vycházející z Nette/Sandbox
 zápis do "log" a "temp" folderu
 
 `chmod -R a+rw temp log`
+
+commit: [https://github.com/chemix/Nette-Facebook-Reader/commit/dafae017f01730c79da1ede8b2ba6c295ac79f61](Init from Nette Sandbox)
+
+
+Pročištění pískoviště
+=====================
 
 vyčistíme homepage šablonu a připravíme si nový Import Presenter se šablonou.
 
@@ -58,6 +65,10 @@ class ImportPresenter extends BasePresenter
 
 }
 ```
+
+commit: [https://github.com/chemix/Nette-Facebook-Reader/commit/a420a7af22e6ecba6d6d7d5c65e5fae44679ce22](clear homepage template and presenter)
+commit: [added blank Import Presenter](https://github.com/chemix/Nette-Facebook-Reader/commit/668308c23c3e2334b7ee07062228183f80938161)
+
 
 Přidáme trošku Facebooku
 ========================
@@ -139,6 +150,12 @@ Malinko si zjednodušíme ošetření chyb jen na ukončení aplikace.
 }
 ```
 
+commit: [add dependence on Facebook SDK to composer and small typo updates](https://github.com/chemix/Nette-Facebook-Reader/commit/09420de69abc424fe3b06a6a201dd23597465967)
+commit: [load data from Facebook - dirty version](https://github.com/chemix/Nette-Facebook-Reader/commit/f7abe600372f3e77cb7486dbb393bb85c300e7ed)
+commit: [only one catch and application->terminate()](https://github.com/chemix/Nette-Facebook-Reader/commit/17cf92295d9b10da4502d34ea870933ac499983e)
+
+
+
 
 Cache, ať při vývoji nečekáme
 =============================
@@ -153,7 +170,7 @@ Přidáme do use sekce
 use Nette\Caching\Cache;
 ```
 
-Abychom mohli vytvořit instanci třídy Cache tak jí musíme předat nějaký cache storage kam si bude ukládat data. Viz API dokumentace [Nette\Caching\Cache](http://api.nette.org/2.2.1/Nette.Caching.Cache.html#___construct)
+Abychom mohli vytvořit instanci třídy Cache tak jí musíme předat nějaký cache storage kam si bude ukládat data. Viz API dokumentace [Nette\Caching\Cache](http://api.nette.org/2.2.1/Nette.Caching.Cache.html#___construct), nebo [http://doc.nette.org/cs/2.1/caching](dokumentace Cache)
 
 A ten si necháme poslat (injectnout) do třídy pomoci Nette Dependenci Injection. Jediné co musíme udělat je definovat public property $cacheStorage typu \Nette\Caching\IStorage a pomocí anotace @inject nám framework zařídí vše potřebné.
 
@@ -220,6 +237,9 @@ public function renderDefault()
 Nyní by nám druhý request měl trvat výrazně kratší dobu.
 
 ![with cache](/image/nette-facebook-reader/with-cache.png)
+
+commit: [added cache for request](https://github.com/chemix/Nette-Facebook-Reader/commit/e471528d4265d6ee9487a0fbb0401a59a04a3d4a)
+
 
 Ukládáme posty do databáze
 ==========================
@@ -338,6 +358,12 @@ můžeme se přesvědčit, že se nám vše uložilo
 
 ![save posts to database](/image/nette-facebook-reader/save-to-database.png)
 
+commit: [save posts to database](https://github.com/chemix/Nette-Facebook-Reader/commit/2550d2d70c36720526f88bea448864cffda592df)
+
+
+Zobrazení postů z importu 
+=========================
+
 Předáme si výpis práve přidaných postů do šablony a tam si je vypíšeme.
 
 ```
@@ -384,6 +410,9 @@ a
 {/foreach}
 ```
 
+commit: [show post in template](https://github.com/chemix/Nette-Facebook-Reader/commit/7e7ad1456b6a6767fb543dacf5404738e9e40c69)
+
+
 Zobrazení postů na homepage
 ===========================
 
@@ -429,6 +458,8 @@ a nesmíme zapomenout na přidání public property $database;
 	</div>
 </div>
 {% endhighlight %}
+
+commit: [show posts on homepage](https://github.com/chemix/Nette-Facebook-Reader/commit/7fed0d0a70ac7472a1b70d696f18fae4e2993e52)
 
 tuto verzi najdete pod tagem [:prototype](https://github.com/chemix/Nette-Facebook-Reader/tree/prototype)
 
@@ -494,12 +525,14 @@ services:
 	- App\Model\FacebookWallposts
 ```
 
+commit: [model - section for read from db](https://github.com/chemix/Nette-Facebook-Reader/commit/fa96deed64d74de7ff0da782e2eb1d1e4080f9c4)
+
+Import do modelu
+================
+
 To samé uděláme i s částí pro načítání dat z Facebooku.
 
 Při přesunu odstraním používání cache, jelikož už jí při vývoji nepotřebuji ba naopak pokud chci zadat import tak chci aby se provedl vždy.
-
-
-
 
 ``` php
 public function importPostFromFacebook()
@@ -522,9 +555,6 @@ public function importPostFromFacebook()
 	...
 ```
 
-
-
-
 z Import presenteru přemístíme use sekci do modelu a presenter se nám rázem zjednodušil na
 
 ``` php
@@ -543,6 +573,11 @@ class ImportPresenter extends BasePresenter
 }
 ```
 
+commit: [model - section for import data from Facebook](https://github.com/chemix/Nette-Facebook-Reader/commit/dce5d9bc22449ea094ac12cfdc880c5718444cc4)
+
+A co to heslo v kódu? Pryč s nim
+================================
+
 Jako pěkný, ale. Ale nám se ještě nelíbí
 
 ``` php
@@ -557,7 +592,6 @@ $session = $this->facebookSessionManager->getAppSession();
 ```
 
 a do konstruktoru přidáme předání závislosti. plus nezapomene na deklarovaní property.
-
 
 ``` php
 /**
@@ -623,6 +657,10 @@ parameters:
 		appId: APP_ID
 		appSecret: APP_SECRET
 ```
+commit: [extract session generator to new service FacebookSessionManager](https://github.com/chemix/Nette-Facebook-Reader/commit/1f6302dff1a140b2f39898560ad7ac8f170933bf)
+
+tuto verzi najdete pod tagem [:model-di](https://github.com/chemix/Nette-Facebook-Reader/tree/model-di)
+
 
 
 NEXT STEPS
