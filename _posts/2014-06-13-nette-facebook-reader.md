@@ -153,11 +153,7 @@ Přidáme do use sekce
 use Nette\Caching\Cache;
 ```
 
-Abychom mohli vytvořit instanci třídy Cache tak jí musíme předat nějaký storage kam si bude ukládat data. Viz API dokumentace
-
-```
-public function __construct(IStorage $storage,
-```
+Abychom mohli vytvořit instanci třídy Cache tak jí musíme předat nějaký cache storage kam si bude ukládat data. Viz API dokumentace [Nette\Caching\Cache](http://api.nette.org/2.2.1/Nette.Caching.Cache.html#___construct)
 
 A ten si necháme poslat (injectnout) do třídy pomoci Nette Dependenci Injection. Jediné co musíme udělat je definovat public property $cacheStorage typu \Nette\Caching\IStorage a pomocí anotace @inject nám framework zařídí vše potřebné.
 
