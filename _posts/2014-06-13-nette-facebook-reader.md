@@ -664,10 +664,45 @@ commit: [extract session generator to new service FacebookSessionManager](https:
 
 tuto verzi najdete pod tagem [:model-di](https://github.com/chemix/Nette-Facebook-Reader/tree/model-di)
 
+Korektury od Nette Guru 
+-----------------------
+Jako první poslal pull request [Filip Prochazka](http://filip-prochazka.com/). 
+
+commit: [removed useless folder](https://github.com/chemix/Nette-Facebook-Reader/commit/c4a3db274328eec1e99e050d4c40b37945d6a29a) odebírá zbytečné kontrolování složky kterou nepoužíváme
+
+commit: [Refactored default configuration for database](https://github.com/chemix/Nette-Facebook-Reader/commit/ee682fd66f4303ce1ac591cdb57b17fbfbe775b7) Upravuje jak se zapisuje přihlašování k databázi. Nyní jsou parametry (jméno, heslo, server, databáze) vytáhnuté do sekce "parameters". Proto si ze souboru config.local.neon odeberte sekci nette - database a nahraďte ji 
+
+```
+parameters:
+	database:
+		dbname: facebookwall_devel
+		user: facebookwall
+		password: tajneheslo
+```
+
+mnohem čitelnější. 
+
+commit: [export db schema to project](https://github.com/chemix/Nette-Facebook-Reader/commit/743a911744625e62aa1eb4eace190f35eb4bf8b8) přidává zmíněný SQL table creator do kódu
+
+teď ale příjde ta zajímavější část. 
+
+Použití Kdyby/Facebook
+----------------------
+
+```TODO```
+
+commit: [Use kdyby/facebook](https://github.com/chemix/Nette-Facebook-Reader/commit/5dd7bed8fb30eb22284ee2e0fc92a726db0913fd)
+
+
+
+
+_____________________________
+### Díky
+- Filip Procházka
+- Jiří Zralý
 
 
 _____________________________
 ### NEXT STEPS
 
-* pouzit Kdyby/Facebook
 * prihlasovani admina a schvalovani zobrazeni na strance
