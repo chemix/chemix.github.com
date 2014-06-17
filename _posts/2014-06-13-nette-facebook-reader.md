@@ -666,8 +666,8 @@ tuto verzi najdete pod tagem [:model-di](https://github.com/chemix/Nette-Faceboo
 
 
 
-NEXT STEPS
-__________
+_____________________________
+### NEXT STEPS
 
 * pouzit Kdyby/Facebook
 * prihlasovani admina a schvalovani zobrazeni na strance
