@@ -434,10 +434,10 @@ public function renderDefault()
 a nesmíme zapomenout na přidání public property $database;
 
 {% highlight php startinline %}
-	/**
-	 * @var \Nette\Database\Context @inject
-	 */
-	public $database;
+/**
+ * @var \Nette\Database\Context @inject
+ */
+public $database;
 {% endhighlight %}
 
 šablona pak může vypadat nějak takto:
