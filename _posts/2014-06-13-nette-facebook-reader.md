@@ -263,7 +263,7 @@ FLUSH PRIVILEGES;
 
 a vytvoříme si tabulku kam si posty budeme ukládat.
 
-```
+{% highlight sql startinline %}
 CREATE TABLE `facebook_wallposts` (
   `id` varchar(100) CHARACTER SET ascii NOT NULL,
   `created_time` datetime NOT NULL,
@@ -280,16 +280,16 @@ CREATE TABLE `facebook_wallposts` (
   KEY `type` (`type`),
   KEY `created_time` (`created_time`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
-```
+{% endhighlight %}
 
 V presenteru si řekneme ať nám framework předá objekt Nette\Database\Context
 
-```
+{% highlight php startinline %}
 /**
  * @var \Nette\Database\Context @inject
  */
 public $database;
-```
+{% endhighlight %}
 
 v konfiguračním souboru /app/config/config.local.neon si doplňíme připojení k databázi.
 
@@ -308,7 +308,7 @@ Pozor na zápis, liší se od Dibi a občas mě to dokáže zabrzdit ;-)
 
 V presenteru si pak na hulváta doplníme ukládání jednotlivých řádku, připadne po opakovaném importu aktualizaci postit
 
-```php
+{% highlight php startinline %}
 // save data to database
 if (is_array($data) && !empty($data)) {
 	foreach ($data as $rowPost) {
@@ -357,7 +357,7 @@ if (is_array($data) && !empty($data)) {
 		}
 	}
 }
-```
+{% endhighlight %}
 
 můžeme se přesvědčit, že se nám vše uložilo
 
@@ -371,14 +371,14 @@ Zobrazení postů z importu
 
 Předáme si výpis práve přidaných postů do šablony a tam si je vypíšeme.
 
-```
+{% highlight php startinline %}
 // send data to template
 $this->template->wallPosts = $data;
-```
+{% endhighlight %}
 
 a
 
-```
+{% highlight html %}
 {foreach $wallPosts as $post}
 	type: <strong>{$post->type}</strong> <br>
 	<small>
@@ -413,7 +413,7 @@ a
 	{/ifset}
 	<hr>
 {/foreach}
-```
+{% endhighlight %}
 
 commit: [show post in template](https://github.com/chemix/Nette-Facebook-Reader/commit/7e7ad1456b6a6767fb543dacf5404738e9e40c69)
 
