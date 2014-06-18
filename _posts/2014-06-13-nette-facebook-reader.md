@@ -44,14 +44,14 @@ vyčistíme homepage šablonu a připravíme si nový Import Presenter se šablo
 
 /app/templates/Import/default.latte
 
-``` html
+{% highlight html %}
 {block #content}
 	<h1>Import</h1>
-```
+{% endhighlight %}
 
 a /app/presenters/ImportPresenter.php
 
-``` php
+{% highlight php startinline %}
 namespace App\Presenters;
 
 use Nette,
@@ -66,7 +66,7 @@ class ImportPresenter extends BasePresenter
 	}
 
 }
-```
+{% endhighlight %}
 
 commit: [clear homepage template and presenter](https://github.com/chemix/Nette-Facebook-Reader/commit/a420a7af22e6ecba6d6d7d5c65e5fae44679ce22)
 
@@ -710,13 +710,3 @@ _____________________________
 * prihlasovani admina a schvalovani zobrazeni na strance
 
 
-{% highlight php startinline %}
-
-phpinfo();
-
-{% endhighlight %}
-
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~ {.html #example-1}
-<p>paragraph <b>emphasis</b>
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
