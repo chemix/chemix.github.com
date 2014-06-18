@@ -592,13 +592,13 @@ $session = FacebookSession::newAppSession();
 
 hesla chceme v konfiguraci a zde si jen řekneme o funkční session. Nahradíme tedy za
 
-```
+{% highlight php startinline %}
 $session = $this->facebookSessionManager->getAppSession();
-```
+{% endhighlight %}
 
 a do konstruktoru přidáme předání závislosti. plus nezapomene na deklarovaní property.
 
-``` php
+{% highlight php startinline %}
 /**
  * @var \App\Model\FacebookSessionManager
  */
@@ -613,11 +613,11 @@ function __construct(Context $database, FacebookSessionManager $facebook)
 	$this->database = $database;
 	$this->facebookSessionManager = $facebook;
 }
-```
+{% endhighlight %}
 
 a našeho "hloupoučkého" managera definujeme v /app/model/FacebookSessionManager.php
 
-``` php
+{% highlight php startinline %}
 namespace App\Model;
 
 use Facebook\FacebookSession;
@@ -641,7 +641,7 @@ class FacebookSessionManager {
 		return FacebookSession::newAppSession();
 	}
 }
-```
+{% endhighlight %}
 
 registrujeme ho v config.neon
 
