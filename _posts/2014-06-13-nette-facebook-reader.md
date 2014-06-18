@@ -253,13 +253,13 @@ Dalším krokem je uložit si získána data do databáze. Pro práci s databáz
 
 Uživatel bude facebookwall a s heslem 'tajneheslo' bude mít přístup ke všem databázím začínající facebookwall_ v našem vývojovém případě konkrétně k databázi facebookwall_devel
 
-```
+{% highlight sql startinline %}
 CREATE DATABASE `facebookwall_devel` COLLATE 'utf8_czech_ci';
 CREATE USER 'facebookwall'@'localhost' IDENTIFIED BY 'tajneheslo';
 GRANT USAGE ON * . * TO 'facebookwall'@'localhost' IDENTIFIED BY 'tajneheslo' WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0 ;
 GRANT ALL PRIVILEGES ON `facebookwall\_%` . * TO 'facebookwall'@'localhost';
 FLUSH PRIVILEGES;
-```
+{% endhighlight %}
 
 a vytvoříme si tabulku kam si posty budeme ukládat.
 
