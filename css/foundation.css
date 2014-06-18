@@ -1331,7 +1331,9 @@ small {
 code {
   font-family: Consolas, "Liberation Mono", Courier, monospace;
   font-weight: bold;
-  color: #910b0e; }
+  color: #D8D8D8;
+  background: #222;
+  }
 
 /* Lists */
 ul,
