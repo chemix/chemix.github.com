@@ -171,44 +171,44 @@ O cachovaní se nám postara Nette Framework a jeho Nette\Caching\Cache;
 
 Přidáme do use sekce
 
-```
+{% highlight php startinline %}
 use Nette\Caching\Cache;
-```
+{% endhighlight %}
 
-Abychom mohli vytvořit instanci třídy Cache tak jí musíme předat nějaký cache storage kam si bude ukládat data. Viz API dokumentace [Nette\Caching\Cache](http://api.nette.org/2.2.1/Nette.Caching.Cache.html#___construct), nebo [http://doc.nette.org/cs/2.1/caching](dokumentace Cache)
+Abychom mohli vytvořit instanci třídy Cache tak jí musíme předat nějaký cache storage kam si bude ukládat data. Viz API dokumentace [Nette\Caching\Cache](http://api.nette.org/2.2.1/Nette.Caching.Cache.html#___construct)
 
 A ten si necháme poslat (injectnout) do třídy pomoci Nette Dependenci Injection. Jediné co musíme udělat je definovat public property $cacheStorage typu \Nette\Caching\IStorage a pomocí anotace @inject nám framework zařídí vše potřebné.
 
-```
+{% highlight php startinline %}
 class ImportPresenter extends BasePresenter
 {
 	/**
 	 * @var \Nette\Caching\IStorage @inject
 	 */
 	public $cacheStorage;
-```
+{% endhighlight %}
 
 hup, a v našich metodách se ke storage dostaneme snadno pomocí `$this->cacheStorage`
 
-```
+{% highlight php startinline %}
 $cache = new Cache($this->cacheStorage, 'facebookWall');
 $data = $cache->load("stories");
-```
+{% endhighlight %}
 
-Více o cache si nastudujete v dokumentaci Nette\Caching.
+Více o cache si nastudujete v dokumentaci [http://doc.nette.org/cs/2.1/caching]( Cache).
 
 V našem případě pokud se nám nepodaří načíst data z cache (a to se nám napoprvé určitě nepovede) tak si je načteme z Facebooku a do té cache si je uložíme:
 
-```
+{% highlight php startinline %}
 $cache->save("stories", $data, array(
 	Cache::EXPIRATION => '+30 minutes',
 	Cache::SLIDING => TRUE
 ));
-```
+{% endhighlight %}
 
 Výsledkem je
 
-```
+{% highlight php startinline %}
 public function renderDefault()
 {
 	FacebookSession::setDefaultApplication('YOUR_APP_ID', 'YOUR_APP_SECRET');
@@ -237,7 +237,7 @@ public function renderDefault()
 
 	Dumper::dump($data);
 }
-```
+{% endhighlight %}
 
 Nyní by nám druhý request měl trvat výrazně kratší dobu.
 
