@@ -378,7 +378,7 @@ $this->template->wallPosts = $data;
 
 a
 
-{% highlight html %}
+{% highlight smarty %}
 {foreach $wallPosts as $post}
 	type: <strong>{$post->type}</strong> <br>
 	<small>
