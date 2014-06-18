@@ -43,13 +43,14 @@ Pročištění pískoviště
 vyčistíme homepage šablonu a připravíme si nový Import Presenter se šablonou.
 
 /app/templates/Import/default.latte
-```html
+``` html
 {block #content}
 	<h1>Import</h1>
 ```
+
 a /app/presenters/ImportPresenter.php
 
-```php
+``` php
 namespace App\Presenters;
 
 use Nette,
