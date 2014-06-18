@@ -43,6 +43,7 @@ Pročištění pískoviště
 vyčistíme homepage šablonu a připravíme si nový Import Presenter se šablonou.
 
 /app/templates/Import/default.latte
+
 ``` html
 {block #content}
 	<h1>Import</h1>
