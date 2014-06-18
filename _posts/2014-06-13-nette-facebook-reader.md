@@ -710,20 +710,6 @@ _____________________________
 * prihlasovani admina a schvalovani zobrazeni na strance
 
 
-{% codeblock Coffeescript Tricks lang:coffeescript start:51 mark:51,54-55 %}
-# Given an alphabet:
-alphabet = 'abcdefghijklmnopqrstuvwxyz'
-
-# Iterate over part of the alphabet:
-console.log letter for letter in alphabet[4..8]
-{% endcodeblock %}
-
-<% highlight php startinline %>
-
-phpinfo();
-
-<% endhighlight %>
-
 {% highlight php startinline %}
 
 phpinfo();
