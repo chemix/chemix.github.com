@@ -423,26 +423,26 @@ Zobrazení postů na homepage
 
 V HomepagePresenteru si načteme posty co jsme načetly importem. Jelikož, ale nechcem zobrazovat všechny posty nastavíme si u některých v databázi status na 1 a budem zobrazovat pouze tyto.
 
-```
+{% highlight php startinline %}
 public function renderDefault()
 {
 	$facebookWallPosts = $this->database->table('facebook_wallposts')->where('status','1')->limit(5)->fetchAll();
 	$this->template->wallPosts = $facebookWallPosts;
 }
-```
+{% endhighlight %}
 
 a nesmíme zapomenout na přidání public property $database;
 
-```
+{% highlight php startinline %}
 	/**
 	 * @var \Nette\Database\Context @inject
 	 */
 	public $database;
-```
+{% endhighlight %}
 
 šablona pak může vypadat nějak takto:
 
-{% highlight html %}
+{% highlight smarty %}
 <div n:if="$wallPosts" class="facebook-posts">
 	<div n:foreach="$wallPosts as $post" class="post {$post->type}">
 		<h3 n:if="$post->name">{$post->name}</h3>
@@ -477,7 +477,7 @@ Všiměte si jak si v konstruktoru řekneme o Nette\Database\Context
 
 app/model/FacebookWallpost.php
 
-``` php
+{% highlight php startinline %}
 namespace App\Model;
 
 use Nette\Database\Context;
@@ -504,11 +504,11 @@ class FacebookWallposts extends Object
 			->fetchAll();
 	}
 }
-```
+{% endhighlight %}
 
 a v presenteru přepíšeme vypisování postů na
 
-``` php
+{% highlight php startinline %}
 /**
  * @var \App\Model\FacebookWallposts @inject
  */
@@ -518,7 +518,7 @@ public function renderDefault()
 {
 	$this->template->wallPosts = $this->wallposts->getLastPosts();
 }
-```
+{% endhighlight %}
 
 Property $database jsme nahradili za $wallpost a změnili typ třídy co chceme po frameworku aby nám předal. Aby to celé fungovalo musíme ješte danou servisu zaregitrovat v config.neon
 
@@ -539,7 +539,7 @@ To samé uděláme i s částí pro načítání dat z Facebooku.
 
 Při přesunu odstraním používání cache, jelikož už jí při vývoji nepotřebuji ba naopak pokud chci zadat import tak chci aby se provedl vždy.
 
-``` php
+{% highlight php startinline %}
 public function importPostFromFacebook()
 {
 	FacebookSession::setDefaultApplication('YOUR_APP_ID', 'YOUR_APP_SECRET');
@@ -558,11 +558,11 @@ public function importPostFromFacebook()
 
 	// save data to database
 	...
-```
+{% endhighlight %}
 
 z Import presenteru přemístíme use sekci do modelu a presenter se nám rázem zjednodušil na
 
-``` php
+{% highlight php startinline %}
 class ImportPresenter extends BasePresenter
 {
 	/**
@@ -576,7 +576,7 @@ class ImportPresenter extends BasePresenter
 	}
 
 }
-```
+{% endhighlight %}
 
 commit: [model - section for import data from Facebook](https://github.com/chemix/Nette-Facebook-Reader/commit/dce5d9bc22449ea094ac12cfdc880c5718444cc4)
 
@@ -585,10 +585,10 @@ A co to heslo v kódu? Pryč s nim
 
 Jako pěkný, ale. Ale nám se ještě nelíbí
 
-``` php
+{% highlight php startinline %}
 FacebookSession::setDefaultApplication('YOUR_APP_ID', 'YOUR_APP_SECRET');
 $session = FacebookSession::newAppSession();
-```
+{% endhighlight %}
 
 hesla chceme v konfiguraci a zde si jen řekneme o funkční session. Nahradíme tedy za
 
