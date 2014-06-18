@@ -103,16 +103,16 @@ a zjistíme si Facebook App ID a App Secret
 
 Na hulváta si zkusíme načíst data skrze Facebook Graph Api. V našem Import Presenteru přidáme do hlavičky
 
-```php
+{% highlight php startinline %}
 use Facebook\FacebookRequest;
 use Facebook\FacebookRequestException;
 use Facebook\FacebookSession;
 use Tracy\Dumper;
-```
+{% endhighlight %}
 
 a metodu přepíšeme podle ukázky z dokumentace k PHP Facebook SDK
 
-```php
+{% highlight php startinline %}
 public function renderDefault()
 {
 	FacebookSession::setDefaultApplication('YOUR_APP_ID', 'YOUR_APP_SECRET');
@@ -138,7 +138,7 @@ public function renderDefault()
 
 	Dumper::dump($data);
 }
-```
+{% endhighlight %}
 
 po zkouknutí výstupu bychom měli vidět dump pole o 25 položkách
 
@@ -146,12 +146,12 @@ po zkouknutí výstupu bychom měli vidět dump pole o 25 položkách
 
 Malinko si zjednodušíme ošetření chyb jen na ukončení aplikace.
 
-```
+{% highlight php startinline %}
 } catch (\Exception $ex) {
 	throw $ex;
 	$this->terminate();
 }
-```
+{% endhighlight %}
 
 commit: [add dependence on Facebook SDK to composer and small typo updates](https://github.com/chemix/Nette-Facebook-Reader/commit/09420de69abc424fe3b06a6a201dd23597465967)
 
