@@ -34,9 +34,7 @@ zápis do "log" a "temp" folderu
 
 `chmod -R a+rw temp log`
 
-<div class="commit">
 commit: [Init from Nette Sandbox](https://github.com/chemix/Nette-Facebook-Reader/commit/dafae017f01730c79da1ede8b2ba6c295ac79f61)
-</div>
 
 Pročištění pískoviště
 ---------------------
