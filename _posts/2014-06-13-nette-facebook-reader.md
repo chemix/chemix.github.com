@@ -9,7 +9,7 @@ published: true
 
 <p class="meta">12 Jun 2014 - Prague (Bohemia / Czech Republic)</p>
 
-``` DRAFT ```
+`DRAFT`
 
 
 Na jednom projektu jsem narazil na potřebu zobrazovat posty z Facebooku na klientově stránce. Inu začal jsem psát prototyp jak bych danou věc řešil. Prototyp jsem "spíchnul" za hodinku, ale bylo to uděláno tak trošku na hulváta. Tak jsem si řekl že to postupně přepíšu tak jak by to třeba napsal nějaký zkušený programátor s Nette frameworkem. Na [http://srazy.info/nettefwpivo](http://srazy.info/nettefwpivo) jsem danou věc přednesl a Nette guruové mi přislíbili odbornější konzultace, tak doufám že se nám podaří vytvořit návod jak by se takové věci nad Nette mohli psát.
@@ -687,10 +687,36 @@ commit: [export db schema to project](https://github.com/chemix/Nette-Facebook-R
 
 teď ale příjde ta zajímavější část. 
 
-Použití Kdyby/Facebook
+Použití Kdyby/Facebook {#kdyby-facebook}
 ----------------------
 
-```TODO```
+Jako první nahradíme v *composer.json* Facebook/SDK za Kdyby/Facebook
+
+```
+	"require": {
+		"php": ">= 5.3.7",
+		"nette/nette": "~2.2.0",
+		"dg/adminer-custom": "~1.0",
+		"kdyby/facebook" : "dev-master"
+	},
+```
+
+a aktualizujeme composer pomocí `composer update`. Smažeme náš "hloupoučký" *FacebookSessionManager.php* a odebereme i jeho registraci do services v *config.neon*, zde naopak přidáme sekci extensions a do ní registrujeme Kdyby Facebook
+
+```
+extensions:
+	facebook: Kdyby\Facebook\DI\FacebookExtension
+```
+
+Tato extension vyžaduje v configu Facebook App ID a Facebook Secret. Proto do lokálního *config.local.neon* přemístíme tyto informace ze sekce params (kam jsme si je uložili) do sekce facebook.
+
+```
+facebook:
+	appId: "APP_ID"
+	appSecret: "APP_SECRET"
+```
+
+(APP_ID dejte do uvozovek, jinak je brán jako integer a Kdyby/Facebook vyhodí excaption.)
 
 commit: [Use kdyby/facebook](https://github.com/chemix/Nette-Facebook-Reader/commit/5dd7bed8fb30eb22284ee2e0fc92a726db0913fd)
 
