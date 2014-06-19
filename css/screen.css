@@ -100,3 +100,12 @@ ul.posts {
   #related h2 {
     margin-bottom: 1em;
   }
+
+h1, h2 {
+  font-family: 'PT Sans Caption', sans-serif;
+}
+
+h3 {
+  font-family: 'Amatic SC', cursive;
+}
+
