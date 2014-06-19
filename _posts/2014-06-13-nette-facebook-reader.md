@@ -706,6 +706,12 @@ a aktualizujeme composer pomocí `composer update`. Smažeme náš "hloupoučký
 ```
 extensions:
 	facebook: Kdyby\Facebook\DI\FacebookExtension
+
+services:
+	- App\Model\UserManager
+	- App\RouterFactory
+	router: @App\RouterFactory::createRouter
+	- App\Model\FacebookWallposts
 ```
 
 Tato extension vyžaduje v configu Facebook App ID a Facebook Secret. Proto do lokálního *config.local.neon* přemístíme tyto informace ze sekce params (kam jsme si je uložili) do sekce facebook.
@@ -717,6 +723,62 @@ facebook:
 ```
 
 (APP_ID dejte do uvozovek, jinak je brán jako integer a Kdyby/Facebook vyhodí excaption.)
+
+A ve FacebookWallpost.php uděláme pár změn. Prvně si upravíme use sekci. Odebereme Facebook SDK a nahradíme ho za Kdyby\Facebook a přidáme Tracy\Debugger.
+
+{% highlight php startinline %}
+use Kdyby\Facebook\Facebook;
+use Kdyby\Facebook\FacebookApiException;
+use Nette\Database\Context;
+use Nette\Object;
+use Tracy\Debugger;
+{% endhighlight %}
+
+Pak nahradíme inicializaci session managera za Kdyby\Facebook
+
+{% highlight php startinline %}
+/**
+ * @var Facebook
+ */
+protected $facebook;
+
+/**
+ * @param Context $database
+ * @param Facebook $facebook
+ */
+function __construct(Context $database, Facebook $facebook)
+{
+	$this->database = $database;
+	$this->facebook = $facebook;
+}
+{% endhighlight %}
+
+a zjednoduší se nám i volání samotného požadavku. Plus si budeme logovat případnou chybu. 
+
+{% highlight php startinline %}
+public function importPostFromFacebook()
+{
+	try {
+		$posts = $this->facebook->api('/nettefw/feed');
+		$data = $posts['data'];
+
+	} catch (\Exception $ex) {
+		Debugger::log($ex->getMessage(), 'facebook');
+		return array();
+	}
+
+	// save data to database
+    ...
+{% endhighlight %}
+
+>Q: Proč `return array();` namísto `$this->terminate();`
+>A: ???
+
+Teď, když si znovu spustíme import, tak bychom měli v Tracy vidět novou ikonku Facebooku a u ní základní informace o volání jeho API. Krása.
+
+![Kdyby Facebook - Tracy extension](/image/nette-facebook-reader/kdyby-facebook-tracy)
+
+
 
 commit: [Use kdyby/facebook](https://github.com/chemix/Nette-Facebook-Reader/commit/5dd7bed8fb30eb22284ee2e0fc92a726db0913fd)
 
