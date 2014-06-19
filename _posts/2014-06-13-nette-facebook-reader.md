@@ -777,7 +777,7 @@ public function importPostFromFacebook()
 
 Teď, když si znovu spustíme import, tak bychom měli v Tracy vidět novou ikonku Facebooku a u ní základní informace o volání jeho API. Krása.
 
-![Kdyby Facebook - Tracy extension](/image/nette-facebook-reader/kdyby-facebook-tracy)
+![Kdyby Facebook - Tracy extension](/image/nette-facebook-reader/kdyby-facebook-tracy.png)
 
 
 
@@ -796,4 +796,3 @@ commit: [Use kdyby/facebook](https://github.com/chemix/Nette-Facebook-Reader/com
 
 * schvalovani zobrazeni na strance
 * prihlasovani admina?
-
