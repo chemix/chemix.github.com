@@ -771,8 +771,9 @@ public function importPostFromFacebook()
     ...
 {% endhighlight %}
 
->Q: Proč `return array();` namísto `$this->terminate();`
->A: ???
+> Q: Proč `return array();` namísto `$this->terminate();`
+> 
+> A: ???
 
 Teď, když si znovu spustíme import, tak bychom měli v Tracy vidět novou ikonku Facebooku a u ní základní informace o volání jeho API. Krása.
 
