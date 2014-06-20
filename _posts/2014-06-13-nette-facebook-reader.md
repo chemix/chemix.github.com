@@ -880,19 +880,22 @@ protected function createTemplate()
 {% endhighlight %}
 
 
-
-
-
-
-
 commit: [Use kdyby/facebook](https://github.com/chemix/Nette-Facebook-Reader/commit/5dd7bed8fb30eb22284ee2e0fc92a726db0913fd)
 
+Drobné vylepšováky
+--------------------
 
+Na doporučení Davida jsem odebral z projektového .gitignore soubory Sublime editoru a PHPStormu a zapsal jsem si je do globálního gitignore [podle návodu na githubu](https://help.github.com/articles/ignoring-files#create-a-global-gitignore)
 
+```
+.idea/*
+*.sublime-*
+```
 
 ### Díky
-- Filip Procházka
-- Jiří Zralý
+- [Filip Procházka](https://github.com/fprochazka)
+- [Jiří Zralý](https://github.com/medhi)
+- [David Matějka](https://github.com/matej21)
 
 
 
