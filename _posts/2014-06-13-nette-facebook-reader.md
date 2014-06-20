@@ -687,8 +687,8 @@ commit: [export db schema to project](https://github.com/chemix/Nette-Facebook-R
 
 teď ale příjde ta zajímavější část. 
 
-Použití Kdyby/Facebook {#kdybyfacebook}
-----------------------
+## Použití Kdyby/Facebook {#kdybyfacebook}
+
 
 Jako první nahradíme v *composer.json* Facebook/SDK za [Kdyby/Facebook](https://github.com/Kdyby/Facebook)
 
