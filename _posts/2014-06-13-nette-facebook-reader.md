@@ -833,6 +833,53 @@ if ($rowPost->type == 'status' && isset($rowPost->story)) {
 $imported[$post['id']] = ArrayHash::from($rowPost);
 {% endhighlight %}
 
+### Latte filter 
+Filip do kódu přidal i ukázku jak se poprat s if peklem v šablonách pomocí Latte filtru.
+
+V *HomepagePresernter* definujeme metodu [createTemplate](https://github.com/chemix/Nette-Facebook-Reader/blob/5dd7bed8fb30eb22284ee2e0fc92a726db0913fd/app/presenters/HomepagePresenter.php#L27), která vrací presenteru template object, který se použije pro render šablon. K této šabloňe přidáme filtr, který se bude starat o odkazy na posty.
+
+{% highlight php startinline %}
+protected function createTemplate()
+	{
+		/** @var Nette\Bridges\ApplicationLatte\Template $template */
+		$template = parent::createTemplate();
+		$template->addFilter('fbPostLink', function ($fbPost) {
+			if (!empty($fbPost->link)) {
+				return $fbPost->link;
+			}
+
+			if ($m = Nette\Utils\Strings::match($fbPost->id, '~^(?P<pageId>[^_]+)_(?P<postId>[^_]+)\\z~')) {
+				return 'https://www.facebook.com/nettefw/posts/' . urlencode($m['postId']);
+			}
+
+			return NULL;
+		});
+
+		return $template;
+	}
+{% endhighlight %}
+
+* filter se jmenuje fbPostLink
+* pokud daný post má definovaný link vrací tento link
+* pokud se podaří z post id (které obsahuje {pageId}\_{postId} ) získat postId vrátí link na konkrétní post na facebooku
+* voláme ho nad objektem $post
+
+šablona se nám pak zjednoduší na 
+
+{% highlight smarty %}
+<div n:foreach="$wallPosts as $post" class="post {$post->type}">
+	<h3 n:if="$post->name">{$post->name}</h3>
+	<img n:if="$post->picture" src="{$post->picture}" />
+	<p>
+		{if $post->message}{$post->message|truncate:250:'...'}{/if}
+		<a href="{$post|fbPostLink}">více</a>
+	</p>
+</div>
+{% endhighlight %}
+
+
+
+
 
 
 
