@@ -882,6 +882,9 @@ protected function createTemplate()
 
 commit: [Use kdyby/facebook](https://github.com/chemix/Nette-Facebook-Reader/commit/5dd7bed8fb30eb22284ee2e0fc92a726db0913fd)
 
+
+tuto verzi najdete pod tagem [:kdyby](https://github.com/chemix/Nette-Facebook-Reader/tree/kdyby)
+
 Drobné vylepšováky
 --------------------
 
