@@ -779,7 +779,7 @@ Teď, když si znovu spustíme import, tak bychom měli v Tracy vidět novou iko
 
 ![Kdyby Facebook - Tracy extension](/image/nette-facebook-reader/kdyby-facebook-tracy.png)
 
-Další vychytávkou co Kdyby\Facebook má je metoda iterate. Pokud jste si všimli tak volání Facebook API vrací cca 20 záznamů a adresu pro další (paging) toho tato metoda využívá umožnuje nad výsledkem iterovat třeba ve foreach a donačíst tak úplně všechny posty.
+Další vychytávkou co Kdyby\Facebook má je metoda iterate. Pokud jste si všimli tak volání Facebook API vrací cca 25 záznamů a adresu pro další (paging) toho tato metoda využívá umožnuje nad výsledkem iterovat třeba ve foreach a donačíst tak úplně všechny posty.
 
 Nahradíme tedy volání *api* za *iterate*. Zde už dostáváme čisté "pole" všech postů tak poupravíme i samotné procházení výsledků.
 
@@ -796,7 +796,41 @@ $imported = array();
 // save data to database
 foreach ($posts as $rowPost) {
   ...
+}
+return $imported;
 {% endhighlight %}
+
+Když teď, zkusíme import, v Tracy panelu uvidíme že se Facebook Api volalo vícekrát a v panelu je vidět detail každého volání.
+
+Filip pak přepsal mé ifové peklíčko do mnohem čitelnější podoby pomocí [ternárního operátora "?:"](http://php.vrana.cz/ternarni-operator.php) a nahradil datum ve stringu za DateTime obalené v [Nette\Utils\DateTime](http://api.nette.org/2.2.1/Nette.Utils.DateTime.html) (nezapomenout definovat v use)
+
+{% highlight php startinline %}
+use Nette\Utils\DateTime;
+{% endhighlight %}
+
+a pak 
+
+{% highlight php startinline %}
+$post = array(
+	'id' => $rowPost->id,
+	'type' => $rowPost->type,
+	'created_time' => DateTime::from($rowPost->created_time)->format('Y-m-d H:i:s'),
+	'updated_time' => DateTime::from($rowPost->updated_time)->format('Y-m-d H:i:s'),
+	'name' => isset($rowPost->name) ? $rowPost->name : NULL,
+	'link' => isset($rowPost->link) ? $rowPost->link : NULL,
+	'status_type' => isset($rowPost->status_type) ? $rowPost->status_type : NULL,
+	'message' => isset($rowPost->message) ? $rowPost->message : NULL,
+	'caption' => isset($rowPost->caption) ? $rowPost->caption : NULL,
+	'picture' => isset($rowPost->picture) ? $rowPost->picture : NULL,
+);
+
+// post 'status' use story, we need message
+if ($rowPost->type == 'status' && isset($rowPost->story)) {
+	$post['message'] = $rowPost->story;
+}
+{% endhighlight %}
+
+
 
 
 commit: [Use kdyby/facebook](https://github.com/chemix/Nette-Facebook-Reader/commit/5dd7bed8fb30eb22284ee2e0fc92a726db0913fd)
