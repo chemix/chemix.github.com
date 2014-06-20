@@ -779,6 +779,24 @@ Teď, když si znovu spustíme import, tak bychom měli v Tracy vidět novou iko
 
 ![Kdyby Facebook - Tracy extension](/image/nette-facebook-reader/kdyby-facebook-tracy.png)
 
+Další vychytávkou co Kdyby\Facebook má je metoda iterate. Pokud jste si všimli tak volání Facebook API vrací cca 20 záznamů a adresu pro další (paging) toho tato metoda využívá umožnuje nad výsledkem iterovat třeba ve foreach a donačíst tak úplně všechny posty.
+
+Nahradíme tedy volání *api* za *iterate*. Zde už dostáváme čisté "pole" všech postů tak poupravíme i samotné procházení výsledků.
+
+{% highlight php startinline %}
+try {
+	$posts = $this->facebook->iterate('/nettefw/feed');
+
+} catch (\Exception $ex) {
+	Debugger::log($ex->getMessage(), 'facebook');
+	return array();
+}
+
+$imported = array();
+// save data to database
+foreach ($posts as $rowPost) {
+  ...
+{% endhighlight %}
 
 
 commit: [Use kdyby/facebook](https://github.com/chemix/Nette-Facebook-Reader/commit/5dd7bed8fb30eb22284ee2e0fc92a726db0913fd)
