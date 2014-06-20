@@ -690,7 +690,7 @@ teď ale příjde ta zajímavější část.
 Použití Kdyby/Facebook {#kdyby-facebook}
 ----------------------
 
-Jako první nahradíme v *composer.json* Facebook/SDK za Kdyby/Facebook
+Jako první nahradíme v *composer.json* Facebook/SDK za [Kdyby/Facebook](https://github.com/Kdyby/Facebook)
 
 ```
 	"require": {
@@ -802,13 +802,14 @@ return $imported;
 
 Když teď, zkusíme import, v Tracy panelu uvidíme že se Facebook Api volalo vícekrát a v panelu je vidět detail každého volání.
 
-Filip pak přepsal mé ifové peklíčko do mnohem čitelnější podoby pomocí [ternárního operátora "?:"](http://php.vrana.cz/ternarni-operator.php) a nahradil datum ve stringu za DateTime obalené v [Nette\Utils\DateTime](http://api.nette.org/2.2.1/Nette.Utils.DateTime.html) (nezapomenout definovat v use)
+Filip pak přepsal mé ifové peklíčko do mnohem čitelnější podoby pomocí [ternárního operátora "?:"](http://php.vrana.cz/ternarni-operator.php). Nahradil datum ve stringu za DateTime obalené v [Nette\Utils\DateTime](http://api.nette.org/2.2.1/Nette.Utils.DateTime.html) a vrácený záznam je přetypován na [ArrayHash](http://api.nette.org/2.2.1/Nette.Utils.ArrayHash.html) (nezapomenout definovat v use)
 
 {% highlight php startinline %}
 use Nette\Utils\DateTime;
+use Nette\Utils\ArrayHash;
 {% endhighlight %}
 
-a pak 
+a pak ve foreach
 
 {% highlight php startinline %}
 $post = array(
@@ -828,6 +829,8 @@ $post = array(
 if ($rowPost->type == 'status' && isset($rowPost->story)) {
 	$post['message'] = $rowPost->story;
 }
+// add to return array 
+$imported[$post['id']] = ArrayHash::from($rowPost);
 {% endhighlight %}
 
 
