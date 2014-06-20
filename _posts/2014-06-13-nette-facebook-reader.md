@@ -833,7 +833,7 @@ if ($rowPost->type == 'status' && isset($rowPost->story)) {
 $imported[$post['id']] = ArrayHash::from($rowPost);
 {% endhighlight %}
 
-### Latte filter 
+## Latte filter 
 Filip do kódu přidal i ukázku jak se poprat s if peklem v šablonách pomocí Latte filtru.
 
 V *HomepagePresernter* definujeme metodu [createTemplate](https://github.com/chemix/Nette-Facebook-Reader/blob/5dd7bed8fb30eb22284ee2e0fc92a726db0913fd/app/presenters/HomepagePresenter.php#L27), která vrací presenteru template object, který se použije pro render šablon. K této šabloňe přidáme filtr, který se bude starat o odkazy na posty.
