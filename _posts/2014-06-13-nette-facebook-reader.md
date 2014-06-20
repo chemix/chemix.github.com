@@ -887,10 +887,7 @@ Drobné vylepšováky
 
 Na doporučení Davida jsem odebral z projektového .gitignore soubory Sublime editoru a PHPStormu a zapsal jsem si je do globálního gitignore [podle návodu na githubu](https://help.github.com/articles/ignoring-files#create-a-global-gitignore)
 
-```
-.idea/*
-*.sublime-*
-```
+
 
 ### Díky
 - [Filip Procházka](https://github.com/fprochazka)
