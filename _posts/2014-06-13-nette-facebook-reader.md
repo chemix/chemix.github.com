@@ -890,16 +890,13 @@ Drobné vylepšováky
 
 Na doporučení Davida jsem odebral z projektového *.gitignore* soubory Sublime editoru a PHPStormu a zapsal jsem si je do globálního gitignore [podle návodu na githubu](https://help.github.com/articles/ignoring-files#create-a-global-gitignore)
 
+Administrace postů
+------------------
+Jako poslední úkol jsem si nechal administraci na povolování postů. Vytvoříme si nový presenter *AdminPresenter* a u vypsaných jednotlivých položek přidáme tlačítko enable, disable. To celé pak z "AJAXujem". 
+
 
 
 ### Díky
 - [Filip Procházka](https://github.com/fprochazka)
 - [Jiří Zralý](https://github.com/medhi)
 - [David Matějka](https://github.com/matej21)
-
-
-
-### NEXT STEPS
-
-* schvalovani zobrazeni na strance
-* prihlasovani admina?
