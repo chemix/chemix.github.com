@@ -297,7 +297,7 @@ nette:
 	database:
 		dsn: 'mysql:host=127.0.0.1;dbname=facebookwall_devel'
 		user: facebookwall
-		password: mojetajneheslo
+		password: tajneheslo
 		options:
 			lazy: yes
 ```
