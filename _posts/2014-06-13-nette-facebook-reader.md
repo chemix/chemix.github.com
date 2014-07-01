@@ -1107,11 +1107,13 @@ Použij signály než action
 Další radou od zkušených bylo použití signálů (handle). 
 
 > Handle je na změnu stavu aktuálního view. Tj na smazání, zaktivnění položky etc. (Většinou totiž po provedení chceš znova vykreslit tu samou stránku). 
+>
 > Patrik Votoček
 
 nebo 
 
 > Handle je „subsignál“ aktuální akce, je to jako když odešleš formulář. Když máš akci, tak většinou by měla něco zobrazovat, nebo připravovat data pro formulář. Zpracování formuláře taky nedáváme do akce, ale napíšeme na to metodu, kterou dáš formuláři jako callback. Tak přesně to je signál, zpracování nějaké operace (třeba smazání řádků, nebo označení řádku jako hidden) pro aktuální akci (což je třeba výpis jednotlivých řádků).
+>
 > Filip Procházka
 
 Přepracování bylo snadné. Přejmenoval jsem metody z *actionDisablePost* na *handleEnablePost* a volání z 
@@ -1127,7 +1129,9 @@ na vykřičníkový signál
 {% endhighlight %}
 
 ### TIP 
->Matej21: pri odkazovani na akci ve stejnem presenteru staci uvest nazev akce, nemusis jiz uvadet presenter
+> pri odkazovani na akci ve stejnem presenteru staci uvest nazev akce, nemusis jiz uvadet presenter
+>
+> Matej21
 
 commit: [use signals for enable/disable posts](https://github.com/chemix/Nette-Facebook-Reader/commit/24c0c4154122f8a35f283a4fdf16b083ef51d264)
 
