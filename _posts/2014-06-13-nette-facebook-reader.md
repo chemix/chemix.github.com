@@ -894,9 +894,248 @@ Administrace postů
 ------------------
 Jako poslední úkol jsem si nechal administraci na povolování postů. Vytvoříme si nový presenter *AdminPresenter* a u vypsaných jednotlivých položek přidáme tlačítko enable, disable. To celé pak z "AJAXujem". 
 
+Než začnem s php úpravama, provedem pár drobných změn na frontendu ať se na náš výtvor dá aspoň trošku koukat. Osobně mám rád [Zurb Foundation](http://foundation.zurb.com), ale tu samou práci, pro tento případ i možná vhodnější, odvede [Bootstrap](http://getbootstrap.com)
+
+commit: [added zurb foundation 5 and updated templates](https://github.com/chemix/Nette-Facebook-Reader/commit/0e0d4494bf3cd8d853ecaea380381fa78716d444)
+
+commit: [tabs indent](https://github.com/chemix/Nette-Facebook-Reader/commit/0cabe53852463d83ebbb45226ec811438ae5a967)
+
+Výkop administrace
+------------------
+
+Začneme úpravou modelu, kam si přidáme metodu co nám vrátí všechny posty.
+
+{% highlight php startinline %}
+public function getAllPosts()
+{
+	return $this->database->table('facebook_wallposts')
+		->order('created_time DESC')
+		->fetchAll();
+}
+{% endhighlight %}
+
+a následně si je načteme presenterem *AdminPresenter* a pošleme do šablony
+
+{% highlight php startinline %}
+/**
+ * Admin presenter.
+ */
+class AdminPresenter extends BasePresenter
+{
+
+	/**
+	 * @var \App\Model\FacebookWallposts @inject
+	 */
+	public $wallposts;
+
+	public function renderDefault()
+	{
+		$this->template->wallPosts = $this->wallposts->getAllPosts();
+	}
+
+}
+{% endhighlight %}
+
+šablonu je možno vidět v commitu.
+
+commit: [basics for admin init](https://github.com/chemix/Nette-Facebook-Reader/commit/66ac9176ea8ae548d8e5c0b658d9e655a811613f)
+
+Akce disable, enable
+--------------------
+
+Následuje vytvoření v modelu metod co se nám postarají o samotnou editaci postu.
+
+{% highlight php startinline %}
+/**
+ * enable post
+ *
+ * @param $postId string
+ * @return bool
+ */
+public function enablePost($postId)
+{
+	$this->database->table('facebook_wallposts')
+		->where('id', $postId)
+		->update(array('status' => '1'));
+	return TRUE;
+}
+/**
+ * disable post
+ *
+ * @param $postId string
+ * @return bool
+ */
+public function disablePost($postId)
+{
+	$this->database->table('facebook_wallposts')
+		->where('id', $postId)
+		->update(array('status' => '0'));
+	return TRUE;
+}
+{% endhighlight %}
+
+a v presenteru si vytvořím dvě akce co funkcionalitu budou obsluhovat 
+
+{% highlight php startinline %}
+public function actionEnablePost($postId)
+{
+	if ($this->wallposts->enablePost($postId)){
+		$this->flashMessage('Post enabled');
+	}
+	$this->redirect('default');
+}
+public function actionDisablePost($postId)
+{
+	if ($this->wallposts->disablePost($postId)){
+		$this->flashMessage('Post disabled');
+	}
+	$this->redirect('default');
+}
+{% endhighlight %}
+
+v šabloně si upravím odkazy ať fungují
+
+{% highlight smarty %}
+{if $post->status == '1'}
+	<li><a n:href="Admin:disablePost $post->id" class="button alert">disable</a></li>
+{else}
+	<li><a n:href="Admin:enablePost $post->id" class="button">enable</a></li>
+{/if}
+{% endhighlight %}
+
+a fungujeme. 
+
+commit: [enable and disable post](https://github.com/chemix/Nette-Facebook-Reader/commit/2c92ac3844a94fd671d339b3ee8d396969a63031)
+
+První verze zajaxovní
+---------------------
+není to žádná hitparáda, ale funguje, a to se počítá ;-) Začnem úpravou presenteru. Ten pokud se bude jednat o ajaxový požadavek, tak na místo flashMessage nastavíme do proměnné *payload* message co se stalo, a následně pošleme uživateli tento payload. Metoda sendPayload je ulehčení ať se nemusíme starat o posílání JSON Response, vše je čitélne z obsahu [metody sendPayload](http://api.nette.org/2.2.2/source-Application.UI.Presenter.php.html#603) 
+
+{% highlight php startinline %}
+public function actionEnablePost($postId)
+{
+	if ($this->wallposts->enablePost($postId)){
+		$this->flashMessage('Post enabled');
+	if ($this->wallposts->enablePost($postId)) {
+		if ($this->isAjax()) {
+			$this->payload->message = 'Post enabled';
+			$this->sendPayload();
+		} else {
+			$this->flashMessage('Post enabled');
+			$this->redirect('default');
+		}
+	}
+	$this->redirect('default');
+}
+{% endhighlight %}
+
+to samé uděláme i pro druhou metoru *actionDisablePost*. Upravíme si šablonu tak že budem zobrazovat obě tlačítka a jen skrze css budem schovávat to, které zrovna nebudem potřebovat.
+
+{% highlight smarty %}
+<li n:class="disable, !$post->status ? hide"><a n:href="Admin:disablePost $post->id" class="ajax button alert">disable</a></li>
+<li n:class="enable, $post->status ? hide"><a n:href="Admin:enablePost $post->id" class="ajax button">enable</a></li>
+{% endhighlight %}
+
+a pak celé to rozhejbání v JavaScriptu. Pokud kliknem na odkaz co má třídu *.ajax* tak stopnem klasické volání, a zavoláme XHR požadavek. Pokud se nám vrátí message, že je post disablován, tak prohodíme zobrazení tlačítek. (v opačném případě také) Plus pár visuálních drobností (disablování butonu po kliknutí, změna kurzoru na hodinky)
+
+{% highlight javascript %}
+// Ajax click in admin
+$('body').on('click', 'a.ajax', function (event) {
+	event.preventDefault();
+	event.stopImmediatePropagation();
+	var link = $(this);
+	if (link.hasClass('disabled')) {
+		return false;
+	}
+	link.css('cursor', 'wait');
+	link.addClass('disabled');
+	$.post(this.href, function (data) {
+		if (data.message == 'Post disabled') {
+			link.parent().parent().find('.disable').addClass('hide');
+			link.parent().parent().find('.enable').removeClass('hide');
+		} else {
+			// enabled
+			link.parent().parent().find('.disable').removeClass('hide');
+			link.parent().parent().find('.enable').addClass('hide');
+		}
+		link.removeClass('disabled');
+		link.css('cursor', 'default');
+	});
+});
+{% endhighlight %}
+
+commit: [ajax version of enable and disable post](https://github.com/chemix/Nette-Facebook-Reader/commit/c9b5a8fce0a63c3e0c3f69e11b0549d860d871db)
+
+Úprava JSON komunikace
+----------------------
+
+Porovnávat message co se stalo není moc "profi", tak si zavedem nějakou proměnou s akcí a status zdali se provedla správně. To s použitím payload proměnné je vcelku snadné 
+
+{% highlight php startinline %}
+if ($this->isAjax()) {
+	$this->payload->message = 'Post enabled';
+	$this->payload->action = 'enable';
+	$this->payload->status = '1';
+	$this->sendPayload();
+	
+} else {
+{% endhighlight %}
+
+v JavaScriptu se pak zeptáme co se dělo a jak to dopadlo a zobrazíme dynamicky flash zprávu.
+
+{% highlight javascript %}
+var flashMessage = function(message)
+{
+	$($('body')[0]).prepend($('<div class="flash info">'+message+'</div>'));
+}
+
+...
+
+if (payload.action == 'disable' && payload.status == '1') {
+	// disabled
+	link.parent().parent().find('.disable').addClass('hide');
+	link.parent().parent().find('.enable').removeClass('hide');
+	flashMessage(payload.message);
+}
+{% endhighlight %}
+
+commit: [better payload status and javascript behaviour](https://github.com/chemix/Nette-Facebook-Reader/commit/a13d6a0c37667278b0acfcd0a712683fb4afe0a0)
+
+Použij signály než action
+-------------------------
+
+Další radou od zkušených bylo použití signálů (handle). 
+
+> Handle je na změnu stavu aktuálního view. Tj na smazání, zaktivnění položky etc. (Většinou totiž po provedení chceš znova vykreslit tu samou stránku). 
+> Patrik Votoček
+
+nebo 
+
+> Handle je „subsignál“ aktuální akce, je to jako když odešleš formulář. Když máš akci, tak většinou by měla něco zobrazovat, nebo připravovat data pro formulář. Zpracování formuláře taky nedáváme do akce, ale napíšeme na to metodu, kterou dáš formuláři jako callback. Tak přesně to je signál, zpracování nějaké operace (třeba smazání řádků, nebo označení řádku jako hidden) pro aktuální akci (což je třeba výpis jednotlivých řádků).
+> Filip Procházka
+
+Přepracování bylo snadné. Přejmenoval jsem metody z *actionDisablePost* na *handleEnablePost* a volání z 
+
+{% highlight php startinline %}
+<a n:href="Admin:enablePost $post->id" class="ajax button">enable</a>
+{% endhighlight %}
+
+na vykřičníkový signál
+
+{% highlight php startinline %}
+<a n:href="enablePost! $post->id" class="ajax button">enable</a>
+{% endhighlight %}
+
+### TIP 
+>Matej21: pri odkazovani na akci ve stejnem presenteru staci uvest nazev akce, nemusis jiz uvadet presenter
+
+commit: [use signals for enable/disable posts](https://github.com/chemix/Nette-Facebook-Reader/commit/24c0c4154122f8a35f283a4fdf16b083ef51d264)
+
+
 
 
 ### Díky
 - [Filip Procházka](https://github.com/fprochazka)
 - [Jiří Zralý](https://github.com/medhi)
 - [David Matějka](https://github.com/matej21)
+- [Patrik Votoček](https://github.com/Vrtak-CZ)
