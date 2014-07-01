@@ -1120,13 +1120,13 @@ nebo
 
 Přepracování bylo snadné. Přejmenoval jsem metody z *actionDisablePost* na *handleEnablePost* a volání z 
 
-{% highlight php startinline %}
+{% highlight smarty %}
 <a n:href="Admin:enablePost $post->id" class="ajax button">enable</a>
 {% endhighlight %}
 
 na vykřičníkový signál
 
-{% highlight php startinline %}
+{% highlight smarty %}
 <a n:href="enablePost! $post->id" class="ajax button">enable</a>
 {% endhighlight %}
 
