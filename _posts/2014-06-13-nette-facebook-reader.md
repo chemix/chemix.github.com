@@ -892,6 +892,7 @@ Na doporučení Davida jsem odebral z projektového *.gitignore* soubory Sublime
 
 Administrace postů
 ------------------
+
 Jako poslední úkol jsem si nechal administraci na povolování postů. Vytvoříme si nový presenter *AdminPresenter* a u vypsaných jednotlivých položek přidáme tlačítko enable, disable. To celé pak z "AJAXujem". 
 
 Než začnem s php úpravama, provedem pár drobných změn na frontendu ať se na náš výtvor dá aspoň trošku koukat. Osobně mám rád [Zurb Foundation](http://foundation.zurb.com), ale tu samou práci, pro tento případ i možná vhodnější, odvede [Bootstrap](http://getbootstrap.com)
@@ -1009,6 +1010,7 @@ commit: [enable and disable post](https://github.com/chemix/Nette-Facebook-Reade
 
 První verze zajaxovní
 ---------------------
+
 není to žádná hitparáda, ale funguje, a to se počítá ;-) Začnem úpravou presenteru. Ten pokud se bude jednat o ajaxový požadavek, tak na místo flashMessage nastavíme do proměnné *payload* message co se stalo, a následně pošleme uživateli tento payload. Metoda sendPayload je ulehčení ať se nemusíme starat o posílání JSON Response, vše je čitélne z obsahu [metody sendPayload](http://api.nette.org/2.2.2/source-Application.UI.Presenter.php.html#603) 
 
 {% highlight php startinline %}
@@ -1128,7 +1130,7 @@ na vykřičníkový signál
 <a n:href="enablePost! $post->id" class="ajax button">enable</a>
 {% endhighlight %}
 
-#### TIP 
+#### TIP: piš méně 
 > pri odkazovani na akci ve stejnem presenteru staci uvest nazev akce, nemusis jiz uvadet presenter
 >
 > Matej21
@@ -1137,6 +1139,7 @@ commit: [use signals for enable/disable posts](https://github.com/chemix/Nette-F
 
 Snippety a nette.ajax.js
 ------------------------
+
 Teď přichází pořádné kladivo. Představme si že nechceme ručně ošetřovat ajaxové volání. Prostě ať se udělá co se udělat má a změní se jen potřebné. K tomu slouží [Snippety](http://doc.nette.org/cs/2.1/ajax). Snippet chápu jako pojmenovaný prvek na stránce, který v případě potřeby je možné nahradit za jeho aktuální verzi. V našem případě si pro začátek označíme dva snippety. Prvním bude blok kódu co se nám stará o výpis flash messsages
 
 {% highlight smarty %}
@@ -1185,6 +1188,126 @@ pěkné zjednodušení, že? Kabelama se nám přenáší jen co se "opravdu" zm
 
 commit: [use snippets and nette.ajax.js](https://github.com/chemix/Nette-Facebook-Reader/commit/151202a775d65adeccb6a8a991fc759545d935c7)
 
+
+Bacha na F5
+-----------
+
+Zpracování formulářu v Nette funguje na bázi signálu (handle) a tam abychom se vyhnuli problému s refreshem použijeme *redirect()*. Stejně je tomu i v našem případě se signály na disablování a enablování postu. Pokud se nejedná o ajaxový požadavek, tak přesměrujem.
+
+{% highlight php startinline %}
+// F5 protection without JS
+if (!$this->isAjax()){
+	$this->redirect('this');
+}
+{% endhighlight %}
+
+commit: [redirect after handle signal without JS](https://github.com/chemix/Nette-Facebook-Reader/commit/dfbb0431ab2ff2225f8fba55ae79ee0ece7fabf2)
+
+
+Posílání opravdu jen toho co je třeba
+-------------------------------------
+
+Ajaxové požadavky sviští o 106 jen se nám v každém requestu ajaxem posílá celá tabulka postů. Ale my změnili jen jeden, co kdyby se tedy posílal jen tenhle jeden spolu s flash message? Lze. Technika se nazývá [dynamické snippety](http://doc.nette.org/cs/2.1/ajax#toc-dynamicke-snippety)
+
+každý řádek zabalíme do jednoznačne identifikovatelného snippetu (použijeme n makro)
+
+{% highlight smarty %}
+{snippet wallposts}
+	{foreach $wallPosts as $post}
+		<div class="row" n:snippet="item-$post->id">
+{% endhighlight %}
+
+a přidáme trochu logiky do handle. V případě že se jedná o ajaxový požadavek, načteme jen aktuálně zpracovávaný řádek a do šablony ho pošleme jako "seznam všech postů", v normálním požadavku pošleme do šablony posty všechny.
+
+{% highlight php startinline %}
+public function handleEnablePost($postId)
+{
+	if ($this->wallposts->enablePost($postId)) {
+		$this->template->wallPosts = $this->isAjax()
+			? array($this->wallposts->getOne($postId))
+			: $this->wallposts->getAllPosts();
+		$this->flashMessage('Post enabled');
+		$this->redrawControl('flashes');
+		$this->redrawControl('wallposts');
+{% endhighlight %}
+
+jelikož se handle zpracovává dříve než render viz [životní cyklus presenteru](http://doc.nette.org/cs/2.1/presenters#toc-zivotni-cyklus-presenteru), tak pokud uživatel bez JavaScriptu změnil viditelnost postu, tak už do šablony poslal seznam všech postů a render už tuto věc dělat nemusí, tak si to ošetříme.
+
+{% highlight php startinline %}
+public function renderDefault()
+{
+	if (!isset($this->template->wallPosts)) {
+		$this->template->wallPosts = $this->wallposts->getAllPosts();
+	}
+}
+{% endhighlight %}
+
+commit: [Add method getOne to Model\FacebookWallposts](https://github.com/chemix/Nette-Facebook-Reader/commit/229592e47887ba5160f627041a9f2698ddaa3e08)
+
+commit: [use dynamic snippets](https://github.com/chemix/Nette-Facebook-Reader/commit/d4e73defeb07033c4da59f5c3ee4892abbeb63e6)
+
+Zničíme duplicitní kód
+----------------------
+
+Metody *handleEnablePost* a *handleDisablePost($postId)* mají dost kódu úplně stejného. Proto mě napadlo že bych je nějak předělal.
+
+**První** nápad byl mít metodu *handleChangePostStatus($postId, $actionType)*, kde by jako druhý parametr byl typ akce, disable nebo enable. Dva parametry se mi nakonec nelíbily.
+
+#### TIP: rezervovaná slova
+zde jsem původně měl parametr pojmenová pouze *$action* a ouhle nějak to nefungovalo. Narazil jsem na pojem rezervovaných proměnných. Tak bacha na ně ;-) Proto i submit button ve formuláři by neměl mít jméno *action*. Další slova jsou: *$do*, *$_fid*, (TODO) .. a *$action*
+
+**Druhým** nápadem bylo mít metodu *handleTogglePostStatus($postId)*, která by si zjistila zda je článek povolen a zakázala by ho nebo opačně. Zjistil jsem, že by status ani zjištovat nemusela jen by SQL update otočil hodnotu (nezkoušel jsem). Toto řešení jsem zavrhl kvůli zobrazení ve dvou oknech současně. Chování by mohlo být nelogické.
+
+**Třetím** nápadem bylo vytáhnout společnou logiku do vlastní metody a u něj jsem zůstal.
+
+{% highlight php startinline %}
+protected function afterTogglePostStatus($status, $postId, $message)
+{
+	if ($status) {
+		$this->template->wallPosts = $this->isAjax()
+			? array($this->wallposts->getOne($postId))
+			: $this->wallposts->getAllPosts();
+
+		$this->flashMessage($message);
+		$this->redrawControl('flashes');
+		$this->redrawControl('wallposts');
+	}
+	// F5 protection without JS
+	if (!$this->isAjax()){
+		$this->redirect('this');
+	}
+}
+
+public function handleEnablePost($postId)
+{
+	$status = $this->wallposts->enablePost($postId);
+	$this->afterTogglePostStatus($status, $postId, 'Post enabled');
+}
+
+public function handleDisablePost($postId)
+{
+	$status = $this->wallposts->disablePost($postId);
+	$this->afterTogglePostStatus($status, $postId, 'Post disabled');
+}
+{% endhighlight %}
+
+commit: [refactor handleDisable and handleEnable](https://github.com/chemix/Nette-Facebook-Reader/commit/8cc54bf7e2898fffa6512ccb89be3ebd12ab722a)
+
+Drobnosti
+---------
+
+Dobré je mít v repozitáři šablonu pro *config.local.neon*
+
+commit: [add config.local.neon template](https://github.com/chemix/Nette-Facebook-Reader/commit/5fa51fbedc03677f20357282c6106a9a21c6f65f)
+
+
+Chtěl jsem oku lahodící výpis postů na homepage
+
+commit: [better homepage render with masonry plugin](https://github.com/chemix/Nette-Facebook-Reader/commit/d379b0d77c81c9718eadd32fc10b5da8c0181d98)
+
+A pomocí CSS animované zmizení flash message
+
+commit: [css autohide flash messages via](https://github.com/chemix/Nette-Facebook-Reader/commit/c7e45f59d17bab2b45d81792ff34a3e953253011)
 
 
 
