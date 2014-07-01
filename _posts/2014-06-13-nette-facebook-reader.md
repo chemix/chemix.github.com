@@ -1312,7 +1312,7 @@ A pomocí CSS animované zmizení flash message
 commit: [css autohide flash messages via](https://github.com/chemix/Nette-Facebook-Reader/commit/c7e45f59d17bab2b45d81792ff34a3e953253011)
 
 
-tuto verzi najdete pod tagem [:snippets](https://github.com/chemix/Nette-Facebook-Reader/tree/snippets)
+tuto verzi najdete pod tagem [:admin](https://github.com/chemix/Nette-Facebook-Reader/tree/admin)
 
 
 
