@@ -1128,7 +1128,7 @@ na vykřičníkový signál
 <a n:href="enablePost! $post->id" class="ajax button">enable</a>
 {% endhighlight %}
 
-### TIP 
+#### TIP 
 > pri odkazovani na akci ve stejnem presenteru staci uvest nazev akce, nemusis jiz uvadet presenter
 >
 > Matej21
