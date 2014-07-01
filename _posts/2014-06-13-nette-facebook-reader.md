@@ -1231,6 +1231,8 @@ public function handleEnablePost($postId)
 		$this->redrawControl('wallposts');
 {% endhighlight %}
 
+![json dynamic snippets response](/image/nette-facebook-reader/dynamic-snippets.png)
+
 jelikož se handle zpracovává dříve než render viz [životní cyklus presenteru](http://doc.nette.org/cs/2.1/presenters#toc-zivotni-cyklus-presenteru), tak pokud uživatel bez JavaScriptu změnil viditelnost postu, tak už do šablony poslal seznam všech postů a render už tuto věc dělat nemusí, tak si to ošetříme.
 
 {% highlight php startinline %}
