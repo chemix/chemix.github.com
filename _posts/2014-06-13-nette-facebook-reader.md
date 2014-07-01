@@ -1179,9 +1179,13 @@ $(function () {
 });
 {% endhighlight %}
 
-pěkné zjednodušení, že?
+pěkné zjednodušení, že? Kabelama se nám přenáší jen co se "opravdu" změnilo
+
+![json snippets response](/image/nette-facebook-reader/snippets-response.png)
 
 commit: [use snippets and nette.ajax.js](https://github.com/chemix/Nette-Facebook-Reader/commit/151202a775d65adeccb6a8a991fc759545d935c7)
+
+
 
 
 ### Díky
