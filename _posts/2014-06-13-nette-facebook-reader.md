@@ -1135,7 +1135,53 @@ na vykřičníkový signál
 
 commit: [use signals for enable/disable posts](https://github.com/chemix/Nette-Facebook-Reader/commit/24c0c4154122f8a35f283a4fdf16b083ef51d264)
 
+Snippety a nette.ajax.js
+------------------------
+Teď přichází pořádné kladivo. Představme si že nechceme ručně ošetřovat ajaxové volání. Prostě ať se udělá co se udělat má a změní se jen potřebné. K tomu slouží [Snippety](http://doc.nette.org/cs/2.1/ajax). Snippet chápu jako pojmenovaný prvek na stránce, který v případě potřeby je možné nahradit za jeho aktuální verzi. V našem případě si pro začátek označíme dva snippety. Prvním bude blok kódu co se nám stará o výpis flash messsages
 
+{% highlight smarty %}
+{snippet flashes}
+	<div n:foreach="$flashes as $flash" class="flash {$flash->type}">{$flash->message}</div>
+{/snippet}
+{% endhighlight %}
+
+druhým bude tabulka wallpostů
+
+{% highlight smarty %}
+{snippet wallposts}
+	{foreach $wallPosts as $post}
+		<div class="row">
+		...
+	{/foreach}
+{/snippet}
+{% endhighlight %}
+
+v tuto chvíli se stali tzv. controllem který v případě, že víme že se změnil tak ho necháme překreslit *redrawControl*. V našem případě pokud chceme změnit status postu tak necháme překreslit snippet *flashes* a *wallposts*
+
+{% highlight php startinline %}
+public function handleEnablePost($postId)
+{
+	if ($this->wallposts->enablePost($postId)) {
+		$this->flashMessage('Post enabled');
+		$this->redrawControl('flashes');
+		$this->redrawControl('wallposts');
+	}
+}
+{% endhighlight %}
+
+kód se nám dosti zjednodušil. Ještě dáme pryč celý náš JavaScript mechanismus co se staral o zpracování požadavku a použijeme knihovnu [nette.ajax.js od Vojty Dobeše](http://addons.nette.org/vojtech-dobes/nette-ajax-js), která umí pracovat automaticky právě se snippety a s jejich přenosovým "JSON protokolem"
+
+jediné co potřebujeme je zavolat její inicializaci. 
+
+{% highlight javascript %}
+$(function () {
+    $.nette.init();
+});
+{% endhighlight %}
+
+pěkné zjednodušení, že?
+
+commit: [use snippets and nette.ajax.js](https://github.com/chemix/Nette-Facebook-Reader/commit/151202a775d65adeccb6a8a991fc759545d935c7)
 
 
 ### Díky
