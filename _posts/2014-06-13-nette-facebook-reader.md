@@ -12,13 +12,16 @@ published: true
 `BETA`
 
 
-Na jednom projektu jsem narazil na potřebu zobrazovat posty z Facebooku na klientově stránce. Inu začal jsem psát prototyp jak bych danou věc řešil. Prototyp jsem "spíchnul" za hodinku, ale bylo to uděláno tak trošku na hulváta. Tak jsem si řekl že to postupně přepíšu tak jak by to třeba napsal nějaký zkušený programátor s Nette frameworkem. Na [http://srazy.info/nettefwpivo](http://srazy.info/nettefwpivo) jsem danou věc přednesl a Nette guruové mi přislíbili odbornější konzultace, tak doufám že se nám podaří vytvořit návod jak by se takové věci nad Nette mohli psát.
+Na jednom projektu jsem narazil na potřebu zobrazovat posty z Facebooku na klientově stránce. Inu začal jsem psát prototyp jak bych danou věc řešil. Prototyp jsem "spíchnul" za hodinku, ale bylo to uděláno tak trošku na hulváta. Tak jsem si řekl že to postupně přepíšu tak jak by to třeba napsal nějaký zkušený programátor s Nette frameworkem. Na [http://srazy.info/nettefwpivo](http://srazy.info/nettefwpivo) jsem danou věc přednesl a Nette guruové mi přislíbili odbornější konzultace.
 
-celý projekt je pak k naleznutí na Githubu [https://github.com/chemix/Nette-Facebook-Reader](https://github.com/chemix/Nette-Facebook-Reader)
+Článek není psán jako how-to (na takovém článku zapracuji) Je psán jak jsem postupoval, co jsem napsal, následně zavrhul nebo přepsal. Proto se nedivte, že tu třeba pracuji s Nette Cache, kterou v zápětí odstraním. Při čtení je dobré koukat na konkrétní [commity](https://github.com/chemix/Nette-Facebook-Reader/commits/master) a článek brát jako "přemýšlení nahlas" k těmto commitům. 
 
-Pokud máte nápad jak danou ukázku vylepšit nebo článek upravit, pošlete pull request, nebo mi napište email.
+Výsledkem je aplikace co naimportuje posty z dané Facebook zdi do databáze, v administraci si pak zvolíte, které posty chcete na své stránce zobrazit.
 
-Článek je psán stylem od nuly k prototypu a nasledné zlepšování. Ne všechen kód je zde uváděn, ale každý kus kódu je zakončen odkazem na daný commit na githubu. 
+Techniky co se používají: Nette\Caching, Facebook SDK, Kdyby\Facebook, Nette\Database, Custom Latte Macro, Snippets. 
+
+Celý projekt je k naleznutí na Githubu [https://github.com/chemix/Nette-Facebook-Reader](https://github.com/chemix/Nette-Facebook-Reader)
+
 
 
 Vytvoření projektu z Nette/Sandbox
@@ -1314,7 +1317,7 @@ commit: [css autohide flash messages via](https://github.com/chemix/Nette-Facebo
 
 tuto verzi najdete pod tagem [:admin](https://github.com/chemix/Nette-Facebook-Reader/tree/admin)
 
-
+Tím končí tento delší rozbor jak jsem připravoval aplikaci na zobrazování postů z Facebooku.
 
 ### Díky
 - [Filip Procházka](https://github.com/fprochazka)
